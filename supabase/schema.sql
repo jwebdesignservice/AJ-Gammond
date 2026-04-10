@@ -1,5 +1,5 @@
 -- AJ Gammond Safety Checklist - Database Schema
--- Run this in Supabase SQL Editor
+-- Safe to run multiple times - handles existing objects gracefully
 
 -- Enable UUID extension
 create extension if not exists "uuid-ossp";
@@ -40,19 +40,23 @@ alter table public.profiles enable row level security;
 alter table public.submissions enable row level security;
 alter table public.submission_notes enable row level security;
 
--- Profiles policies
+-- ── Profiles policies ──────────────────────────────────────────────────────
+drop policy if exists "Users can view own profile" on public.profiles;
 create policy "Users can view own profile"
   on public.profiles for select
   using (auth.uid() = id);
 
+drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
   on public.profiles for update
   using (auth.uid() = id);
 
+drop policy if exists "Users can insert own profile" on public.profiles;
 create policy "Users can insert own profile"
   on public.profiles for insert
   with check (auth.uid() = id);
 
+drop policy if exists "Admins can view all profiles" on public.profiles;
 create policy "Admins can view all profiles"
   on public.profiles for select
   using (
@@ -62,15 +66,18 @@ create policy "Admins can view all profiles"
     )
   );
 
--- Submissions policies
+-- ── Submissions policies ───────────────────────────────────────────────────
+drop policy if exists "Users can view own submissions" on public.submissions;
 create policy "Users can view own submissions"
   on public.submissions for select
   using (auth.uid() = user_id);
 
+drop policy if exists "Users can create submissions" on public.submissions;
 create policy "Users can create submissions"
   on public.submissions for insert
   with check (auth.uid() = user_id);
 
+drop policy if exists "Admins can view all submissions" on public.submissions;
 create policy "Admins can view all submissions"
   on public.submissions for select
   using (
@@ -80,6 +87,7 @@ create policy "Admins can view all submissions"
     )
   );
 
+drop policy if exists "Admins can update all submissions" on public.submissions;
 create policy "Admins can update all submissions"
   on public.submissions for update
   using (
@@ -89,7 +97,8 @@ create policy "Admins can update all submissions"
     )
   );
 
--- Submission notes policies
+-- ── Submission notes policies ──────────────────────────────────────────────
+drop policy if exists "Users can view notes on own submissions" on public.submission_notes;
 create policy "Users can view notes on own submissions"
   on public.submission_notes for select
   using (
@@ -99,6 +108,7 @@ create policy "Users can view notes on own submissions"
     )
   );
 
+drop policy if exists "Admins can view all notes" on public.submission_notes;
 create policy "Admins can view all notes"
   on public.submission_notes for select
   using (
@@ -108,6 +118,7 @@ create policy "Admins can view all notes"
     )
   );
 
+drop policy if exists "Admins can create notes" on public.submission_notes;
 create policy "Admins can create notes"
   on public.submission_notes for insert
   with check (
@@ -117,12 +128,12 @@ create policy "Admins can create notes"
     )
   );
 
--- Create storage bucket for submissions
+-- ── Storage bucket ─────────────────────────────────────────────────────────
 insert into storage.buckets (id, name, public)
 values ('submissions', 'submissions', true)
 on conflict (id) do nothing;
 
--- Storage policies
+drop policy if exists "Users can upload to own folder" on storage.objects;
 create policy "Users can upload to own folder"
   on storage.objects for insert
   with check (
@@ -130,11 +141,12 @@ create policy "Users can upload to own folder"
     (storage.foldername(name))[1] = auth.uid()::text
   );
 
+drop policy if exists "Anyone can view submission files" on storage.objects;
 create policy "Anyone can view submission files"
   on storage.objects for select
   using (bucket_id = 'submissions');
 
--- Function to handle new user signup
+-- ── Auto-create profile on signup ──────────────────────────────────────────
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
@@ -144,18 +156,28 @@ begin
     new.email,
     coalesce(new.raw_user_meta_data->>'name', ''),
     'user'
-  );
+  )
+  on conflict (id) do nothing;
   return new;
 end;
 $$ language plpgsql security definer;
 
--- Trigger for new user signup
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Create indexes for performance
+-- ── Backfill profiles for any existing auth users ──────────────────────────
+insert into public.profiles (id, email, name, role)
+select
+  id,
+  email,
+  coalesce(raw_user_meta_data->>'name', ''),
+  'user'
+from auth.users
+on conflict (id) do nothing;
+
+-- ── Indexes ────────────────────────────────────────────────────────────────
 create index if not exists submissions_user_id_idx on public.submissions(user_id);
 create index if not exists submissions_status_idx on public.submissions(status);
 create index if not exists submissions_created_at_idx on public.submissions(created_at desc);
