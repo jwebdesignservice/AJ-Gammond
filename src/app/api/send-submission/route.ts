@@ -36,7 +36,7 @@ function buildChecklistHtml(items: CheckItem[]): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { submissionId, name, siteItems, machineItems, comment, submittedAt } = body
+    const { name, siteItems, machineItems, comment, submittedAt } = body
 
     // ── Email config from environment ────────────────────────────────────
     const host = process.env.EMAIL_HOST
@@ -66,7 +66,6 @@ export async function POST(req: NextRequest) {
       ``,
       `Submitted by: ${name}`,
       `Date/Time:    ${submittedAt}`,
-      submissionId ? `Submission ID: ${submissionId}` : '',
       ``,
       `── SITE INDUCTION & SAFETY ──`,
       buildChecklistSummary(siteItems ?? []),
@@ -83,7 +82,6 @@ export async function POST(req: NextRequest) {
 <div style="font-family:sans-serif;max-width:640px;margin:auto;background:#f9fafb;padding:24px;border-radius:8px;">
   <h2 style="color:#111827;margin-top:0;">📋 New Safety Checklist Submission</h2>
   <p style="color:#6b7280;font-size:14px;">Submitted by <strong style="color:#111827;">${name}</strong> on ${submittedAt}</p>
-  ${submissionId ? `<p style="color:#6b7280;font-size:12px;">ID: ${submissionId}</p>` : ''}
 
   <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;margin-bottom:16px;">
     <h3 style="margin-top:0;color:#374151;font-size:15px;">Site Induction &amp; Safety</h3>

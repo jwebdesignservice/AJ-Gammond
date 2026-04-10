@@ -83,7 +83,7 @@ export default function NewChecklistPage() {
       }
 
       // Insert submission into Supabase
-      const { data: inserted, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('submissions')
         .insert({
           user_id: user.id,
@@ -94,8 +94,6 @@ export default function NewChecklistPage() {
           signature,
           media_urls: mediaUrls,
         })
-        .select()
-        .single()
 
       if (insertError) throw insertError
 
@@ -105,7 +103,6 @@ export default function NewChecklistPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            submissionId: inserted?.id,
             name,
             siteItems,
             machineItems,
