@@ -54,13 +54,12 @@ export default function NewChecklistPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      // Ensure profile exists (creates it if missing)
-      const { error: profileError } = await supabase.from('profiles').upsert({
-        id: user.id,
-        email: user.email ?? '',
-        name: user.user_metadata?.name ?? name,
-        role: 'user',
-      }, { onConflict: 'id', ignoreDuplicates: true })
+      // Ensure profile exists — runs as SECURITY DEFINER to bypass RLS
+      const { error: profileError } = await supabase.rpc('ensure_profile', {
+        p_id: user.id,
+        p_email: user.email ?? '',
+        p_name: user.user_metadata?.name ?? name,
+      })
       if (profileError) throw new Error('Profile error: ' + profileError.message)
 
       // Upload files

@@ -146,6 +146,19 @@ create policy "Anyone can view submission files"
   on storage.objects for select
   using (bucket_id = 'submissions');
 
+-- ── Ensure profile helper (SECURITY DEFINER bypasses RLS) ─────────────────
+create or replace function public.ensure_profile(
+  p_id uuid,
+  p_email text,
+  p_name text
+) returns void as $$
+begin
+  insert into public.profiles (id, email, name, role)
+  values (p_id, p_email, p_name, 'user')
+  on conflict (id) do nothing;
+end;
+$$ language plpgsql security definer;
+
 -- ── Auto-create profile on signup ──────────────────────────────────────────
 create or replace function public.handle_new_user()
 returns trigger as $$
