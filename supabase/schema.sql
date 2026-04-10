@@ -60,10 +60,7 @@ drop policy if exists "Admins can view all profiles" on public.profiles;
 create policy "Admins can view all profiles"
   on public.profiles for select
   using (
-    exists (
-      select 1 from public.profiles
-      where id = auth.uid() and role = 'admin'
-    )
+    public.is_admin()
   );
 
 -- ── Submissions policies ───────────────────────────────────────────────────
@@ -81,20 +78,14 @@ drop policy if exists "Admins can view all submissions" on public.submissions;
 create policy "Admins can view all submissions"
   on public.submissions for select
   using (
-    exists (
-      select 1 from public.profiles
-      where id = auth.uid() and role = 'admin'
-    )
+    public.is_admin()
   );
 
 drop policy if exists "Admins can update all submissions" on public.submissions;
 create policy "Admins can update all submissions"
   on public.submissions for update
   using (
-    exists (
-      select 1 from public.profiles
-      where id = auth.uid() and role = 'admin'
-    )
+    public.is_admin()
   );
 
 -- ── Submission notes policies ──────────────────────────────────────────────
@@ -112,20 +103,14 @@ drop policy if exists "Admins can view all notes" on public.submission_notes;
 create policy "Admins can view all notes"
   on public.submission_notes for select
   using (
-    exists (
-      select 1 from public.profiles
-      where id = auth.uid() and role = 'admin'
-    )
+    public.is_admin()
   );
 
 drop policy if exists "Admins can create notes" on public.submission_notes;
 create policy "Admins can create notes"
   on public.submission_notes for insert
   with check (
-    exists (
-      select 1 from public.profiles
-      where id = auth.uid() and role = 'admin'
-    )
+    public.is_admin()
   );
 
 -- ── Storage bucket ─────────────────────────────────────────────────────────
@@ -145,6 +130,18 @@ drop policy if exists "Anyone can view submission files" on storage.objects;
 create policy "Anyone can view submission files"
   on storage.objects for select
   using (bucket_id = 'submissions');
+
+-- ── Admin check helper (SECURITY DEFINER breaks RLS recursion) ─────────────
+-- All policies that check admin role use this function to avoid infinite
+-- recursion (admin policy on submissions queries profiles, which triggers
+-- the admin policy on profiles, which queries profiles again).
+create or replace function public.is_admin()
+returns boolean as $$
+  select exists (
+    select 1 from public.profiles
+    where id = auth.uid() and role = 'admin'
+  )
+$$ language sql security definer stable;
 
 -- ── Ensure profile helper (SECURITY DEFINER bypasses RLS) ─────────────────
 create or replace function public.ensure_profile(
