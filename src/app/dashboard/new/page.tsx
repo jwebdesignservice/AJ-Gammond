@@ -20,6 +20,7 @@ export default function NewChecklistPage() {
   const [files, setFiles] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showValidation, setShowValidation] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
 
@@ -27,12 +28,14 @@ export default function NewChecklistPage() {
     setSiteItems((prev) =>
       prev.map((item) => item.id === itemId ? { ...item, value } : item)
     )
+    if (value !== null) setError('')
   }
 
   const updateMachineItem = (itemId: string, value: CheckValue) => {
     setMachineItems((prev) =>
       prev.map((item) => item.id === itemId ? { ...item, value } : item)
     )
+    if (value !== null) setError('')
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,6 +51,18 @@ export default function NewChecklistPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Validate all checklist items are answered
+    const unanswered = [
+      ...siteItems.filter(i => i.value === null || i.value === undefined),
+      ...machineItems.filter(i => i.value === null || i.value === undefined),
+    ]
+    if (unanswered.length > 0) {
+      setShowValidation(true)
+      setError(`Please answer all checklist items — ${unanswered.length} item${unanswered.length !== 1 ? 's' : ''} still need a Yes or No answer.`)
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -163,12 +178,14 @@ export default function NewChecklistPage() {
           title="Site Induction & Safety"
           items={siteItems}
           onUpdate={updateSiteItem}
+          showValidation={showValidation}
         />
 
         <ChecklistGrid
           title="Machine Daily Checks"
           items={machineItems}
           onUpdate={updateMachineItem}
+          showValidation={showValidation}
         />
 
         {/* Additional info */}
