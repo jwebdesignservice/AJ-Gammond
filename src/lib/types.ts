@@ -1,11 +1,13 @@
 export type CheckValue = 'yes' | 'no' | null
 
+// Legacy type kept for reading old Supabase records
 export type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
 
 export interface CheckItem {
   id: string
   label: string
-  values: Record<DayOfWeek, CheckValue>
+  value?: CheckValue                             // current: single day check
+  values?: Record<DayOfWeek, CheckValue>         // legacy: old multi-day submissions
 }
 
 export interface FormData {

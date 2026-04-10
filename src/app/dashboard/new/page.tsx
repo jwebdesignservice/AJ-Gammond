@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
-import { CheckItem, DayOfWeek, CheckValue, FormData } from '@/lib/types'
+import { CheckItem, CheckValue, FormData } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
 import { Loader2, Upload, X, Camera } from 'lucide-react'
 
@@ -25,23 +25,15 @@ export default function NewChecklistPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  const updateSiteItem = (itemId: string, day: DayOfWeek, value: CheckValue) => {
+  const updateSiteItem = (itemId: string, value: CheckValue) => {
     setSiteItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId
-          ? { ...item, values: { ...item.values, [day]: value } }
-          : item
-      )
+      prev.map((item) => item.id === itemId ? { ...item, value } : item)
     )
   }
 
-  const updateMachineItem = (itemId: string, day: DayOfWeek, value: CheckValue) => {
+  const updateMachineItem = (itemId: string, value: CheckValue) => {
     setMachineItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId
-          ? { ...item, values: { ...item.values, [day]: value } }
-          : item
-      )
+      prev.map((item) => item.id === itemId ? { ...item, value } : item)
     )
   }
 
@@ -71,17 +63,17 @@ export default function NewChecklistPage() {
         const { error: uploadError } = await supabase.storage
           .from('submissions')
           .upload(fileName, file)
-        
+
         if (uploadError) throw uploadError
-        
+
         const { data: { publicUrl } } = supabase.storage
           .from('submissions')
           .getPublicUrl(fileName)
-        
+
         mediaUrls.push(publicUrl)
       }
 
-      // Create form data
+      // Build form data
       const formData: FormData = {
         siteInduction: siteItems,
         machineChecks: machineItems,
@@ -90,18 +82,40 @@ export default function NewChecklistPage() {
         signature,
       }
 
-      // Insert submission
-      const { error: insertError } = await supabase.from('submissions').insert({
-        user_id: user.id,
-        status: 'pending',
-        form_data: formData,
-        comment,
-        name,
-        signature,
-        media_urls: mediaUrls,
-      })
+      // Insert submission into Supabase
+      const { data: inserted, error: insertError } = await supabase
+        .from('submissions')
+        .insert({
+          user_id: user.id,
+          status: 'pending',
+          form_data: formData,
+          comment,
+          name,
+          signature,
+          media_urls: mediaUrls,
+        })
+        .select()
+        .single()
 
       if (insertError) throw insertError
+
+      // Send email notification (non-blocking — don't fail submission if email fails)
+      try {
+        await fetch('/api/send-submission', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            submissionId: inserted?.id,
+            name,
+            siteItems,
+            machineItems,
+            comment,
+            submittedAt: new Date().toLocaleString('en-GB'),
+          }),
+        })
+      } catch {
+        // Email failure doesn't block form submission
+      }
 
       router.push('/dashboard')
       router.refresh()
@@ -136,7 +150,7 @@ export default function NewChecklistPage() {
 
         <div className="card space-y-4">
           <h3 className="font-semibold text-lg text-gray-900">Additional Information</h3>
-          
+
           <div>
             <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
               Comment / Fault Description
@@ -184,7 +198,7 @@ export default function NewChecklistPage() {
 
         <div className="card">
           <h3 className="font-semibold text-lg text-gray-900 mb-4">Attachments</h3>
-          
+
           <input
             ref={fileInputRef}
             type="file"

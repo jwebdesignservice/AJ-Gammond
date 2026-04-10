@@ -1,57 +1,40 @@
-import { CheckItem, DayOfWeek } from './types'
+import { CheckItem } from './types'
 
-const days: DayOfWeek[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
-
-const emptyValues = (): Record<DayOfWeek, null> => ({
-  mon: null,
-  tue: null,
-  wed: null,
-  thu: null,
-  fri: null,
-  sat: null,
-  sun: null,
-})
+// ─── Site Induction & Safety ───────────────────────────────────────────────
+// Edit the `label` strings below to change checklist items.
+// Add or remove objects to add/remove checklist rows.
 
 export const siteInductionItems: CheckItem[] = [
-  { id: 'inducted', label: 'Have you been inducted?', values: emptyValues() },
-  { id: 'rams', label: 'Have RAMS been Briefed & Understood?', values: emptyValues() },
-  { id: 'permit', label: 'Have you been issued a permit to dig?', values: emptyValues() },
-  { id: 'briefing', label: 'Have you received a start of shift briefing?', values: emptyValues() },
-  { id: 'safe_area', label: 'Is the work area safe to work?', values: emptyValues() },
-  { id: 'hazards', label: 'Have you walked route to identify Hazards?', values: emptyValues() },
-  { id: 'ppe', label: 'Have you Correct PPE?', values: emptyValues() },
-  { id: 'ppe_inspected', label: 'I confirm that all relevant PPE has been inspected', values: emptyValues() },
-  { id: 'daily_checks', label: 'I confirm all Daily checks have been made', values: emptyValues() },
+  { id: 'inducted',       label: 'Have you been inducted?',                              value: null },
+  { id: 'rams',           label: 'Have RAMS been Briefed & Understood?',                 value: null },
+  { id: 'permit',         label: 'Have you been issued a permit to dig?',                value: null },
+  { id: 'briefing',       label: 'Have you received a start of shift briefing?',         value: null },
+  { id: 'safe_area',      label: 'Is the work area safe to work?',                       value: null },
+  { id: 'hazards',        label: 'Have you walked route to identify Hazards?',           value: null },
+  { id: 'ppe',            label: 'Have you Correct PPE?',                                value: null },
+  { id: 'ppe_inspected',  label: 'I confirm that all relevant PPE has been inspected',   value: null },
+  { id: 'daily_checks',   label: 'I confirm all Daily checks have been made',            value: null },
 ]
+
+// ─── Machine Daily Checks ──────────────────────────────────────────────────
+// Edit the `label` strings below to change checklist items.
 
 export const machineCheckItems: CheckItem[] = [
-  { id: 'engine_oil', label: 'Engine oil levels', values: emptyValues() },
-  { id: 'coolant', label: 'Coolant Levels', values: emptyValues() },
-  { id: 'hydraulic_oil', label: 'Hydraulic Oil Levels', values: emptyValues() },
-  { id: 'air_filters', label: 'Air Filters', values: emptyValues() },
-  { id: 'emergency_stops', label: 'Emergency Stops', values: emptyValues() },
-  { id: 'fan_belts', label: 'Fan Belts tension', values: emptyValues() },
-  { id: 'track_tension', label: 'Track tension', values: emptyValues() },
-  { id: 'digging_chain', label: 'Digging Chain - Tension, Plates', values: emptyValues() },
-  { id: 'grease_points', label: 'Grease Points', values: emptyValues() },
-  { id: 'picks_blocks', label: 'Picks / Blocks', values: emptyValues() },
-  { id: 'cab_dashboard', label: 'Cab Dashboard - Gauges, Dials, Controls', values: emptyValues() },
-  { id: 'hydraulic_rams', label: 'Hydraulic Rams', values: emptyValues() },
-  { id: 'engine_cover', label: 'Engine cover and guards', values: emptyValues() },
-  { id: 'camera_system', label: 'Camera system', values: emptyValues() },
-  { id: 'leakages', label: 'Visual inspection for leakages', values: emptyValues() },
-  { id: 'lighting', label: 'Lighting', values: emptyValues() },
-  { id: 'gps', label: 'GPS (if fitted)', values: emptyValues() },
+  { id: 'engine_oil',      label: 'Engine oil levels',                          value: null },
+  { id: 'coolant',         label: 'Coolant Levels',                             value: null },
+  { id: 'hydraulic_oil',   label: 'Hydraulic Oil Levels',                       value: null },
+  { id: 'air_filters',     label: 'Air Filters',                                value: null },
+  { id: 'emergency_stops', label: 'Emergency Stops',                            value: null },
+  { id: 'fan_belts',       label: 'Fan Belts tension',                          value: null },
+  { id: 'track_tension',   label: 'Track tension',                              value: null },
+  { id: 'digging_chain',   label: 'Digging Chain - Tension, Plates',            value: null },
+  { id: 'grease_points',   label: 'Grease Points',                              value: null },
+  { id: 'picks_blocks',    label: 'Picks / Blocks',                             value: null },
+  { id: 'cab_dashboard',   label: 'Cab Dashboard - Gauges, Dials, Controls',   value: null },
+  { id: 'hydraulic_rams',  label: 'Hydraulic Rams',                             value: null },
+  { id: 'engine_cover',    label: 'Engine cover and guards',                    value: null },
+  { id: 'camera_system',   label: 'Camera system',                              value: null },
+  { id: 'leakages',        label: 'Visual inspection for leakages',             value: null },
+  { id: 'lighting',        label: 'Lighting',                                   value: null },
+  { id: 'gps',             label: 'GPS (if fitted)',                            value: null },
 ]
-
-export const dayLabels: Record<DayOfWeek, string> = {
-  mon: 'M',
-  tue: 'T',
-  wed: 'W',
-  thu: 'T',
-  fri: 'F',
-  sat: 'S',
-  sun: 'S',
-}
-
-export { days }
