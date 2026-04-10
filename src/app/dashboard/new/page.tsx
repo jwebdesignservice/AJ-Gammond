@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
 import { CheckItem, CheckValue, FormData } from '@/lib/types'
@@ -22,7 +21,6 @@ export default function NewChecklistPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
   const supabase = createClient()
 
   const updateSiteItem = (itemId: string, value: CheckValue) => {
@@ -57,12 +55,13 @@ export default function NewChecklistPage() {
       if (!user) throw new Error('Not authenticated')
 
       // Ensure profile exists (creates it if missing)
-      await supabase.from('profiles').upsert({
+      const { error: profileError } = await supabase.from('profiles').upsert({
         id: user.id,
         email: user.email ?? '',
         name: user.user_metadata?.name ?? name,
         role: 'user',
       }, { onConflict: 'id', ignoreDuplicates: true })
+      if (profileError) throw new Error('Profile error: ' + profileError.message)
 
       // Upload files
       const mediaUrls: string[] = []
@@ -122,8 +121,8 @@ export default function NewChecklistPage() {
         // Email failure doesn't block submission
       }
 
-      router.push('/dashboard')
-      router.refresh()
+      // Hard redirect ensures dashboard server component fetches fresh data
+      window.location.href = '/dashboard'
     } catch (err: unknown) {
       const msg =
         (err as { message?: string })?.message ??
