@@ -6,28 +6,28 @@ interface StatusBadgeProps {
 
 const statusConfig: Record<SubmissionStatus, { label: string; className: string }> = {
   pending: {
-    label: 'Pending',
-    className: 'bg-yellow-100 text-yellow-800',
+    label: 'Pending Review',
+    className: 'bg-amber-50 text-amber-700 border border-amber-200',
   },
   approved: {
     label: 'Approved',
-    className: 'bg-green-100 text-green-800',
+    className: 'bg-green-50 text-green-700 border border-green-200',
   },
   rejected: {
     label: 'Rejected',
-    className: 'bg-red-100 text-red-800',
+    className: 'bg-red-50 text-red-700 border border-red-200',
   },
   needs_review: {
     label: 'Needs Review',
-    className: 'bg-blue-100 text-blue-800',
+    className: 'bg-blue-50 text-blue-700 border border-blue-200',
   },
 }
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
   const config = statusConfig[status]
-  
+
   return (
-    <span className={`inline-block px-2 py-1 text-xs font-medium rounded-[4px] ${config.className}`}>
+    <span className={`inline-block px-2.5 py-1 text-xs font-semibold rounded-lg ${config.className}`}>
       {config.label}
     </span>
   )

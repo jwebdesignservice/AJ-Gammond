@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
 import { CheckItem, CheckValue, FormData } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
-import { Loader2, Upload, X, Camera } from 'lucide-react'
+import { Loader2, Upload, X, Camera, Info } from 'lucide-react'
 
 export default function NewChecklistPage() {
   const [siteItems, setSiteItems] = useState<CheckItem[]>(
@@ -82,7 +82,7 @@ export default function NewChecklistPage() {
         signature,
       }
 
-      // Insert submission into Supabase
+      // Insert submission
       const { error: insertError } = await supabase
         .from('submissions')
         .insert({
@@ -97,7 +97,7 @@ export default function NewChecklistPage() {
 
       if (insertError) throw insertError
 
-      // Send email notification (non-blocking — don't fail submission if email fails)
+      // Send email notification (non-blocking)
       try {
         await fetch('/api/send-submission', {
           method: 'POST',
@@ -111,28 +111,44 @@ export default function NewChecklistPage() {
           }),
         })
       } catch {
-        // Email failure doesn't block form submission
+        // Email failure doesn't block submission
       }
 
       router.push('/dashboard')
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setLoading(false)
     }
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Daily Safety Checklist</h1>
+    <div className="max-w-2xl mx-auto pb-10">
+      {/* Page header */}
+      <div className="pt-2 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Daily Safety Checklist</h1>
+        <p className="text-gray-500 text-sm mt-1">
+          Complete all sections below before starting work today
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      {/* How to fill in instructions */}
+      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
+        <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+        <div className="text-sm text-blue-800">
+          <p className="font-semibold mb-1">How to complete this form</p>
+          <p>Tap each check item to mark it as <strong>Yes</strong> (green) or <strong>No</strong> (red). Tap again to clear. Fill in your name and signature at the bottom, then press <strong>Submit Checklist</strong>.</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-[4px] text-sm">
+          <div className="bg-red-50 text-red-700 p-4 rounded-2xl text-sm border border-red-100">
             {error}
           </div>
         )}
 
+        {/* Checklist grids */}
         <ChecklistGrid
           title="Site Induction & Safety"
           items={siteItems}
@@ -145,26 +161,31 @@ export default function NewChecklistPage() {
           onUpdate={updateMachineItem}
         />
 
-        <div className="card space-y-4">
-          <h3 className="font-semibold text-lg text-gray-900">Additional Information</h3>
+        {/* Additional info */}
+        <div className="card space-y-5">
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">Additional Information</h3>
+            <p className="text-gray-500 text-sm">Note any faults or issues found during checks</p>
+          </div>
 
           <div>
-            <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="comment" className="block text-sm font-semibold text-gray-700 mb-1.5">
               Comment / Fault Description
+              <span className="font-normal text-gray-400 ml-1">(optional)</span>
             </label>
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="input min-h-[100px] resize-y"
-              placeholder="Describe any faults or issues..."
+              placeholder="e.g. Hydraulic oil level was low — topped up. Camera system intermittent."
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Name
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 id="name"
@@ -172,13 +193,14 @@ export default function NewChecklistPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input"
+                placeholder="Your full name"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="signature" className="block text-sm font-medium text-gray-700 mb-1">
-                Signature (Type your name)
+              <label htmlFor="signature" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Signature <span className="text-red-500">*</span>
               </label>
               <input
                 id="signature"
@@ -189,12 +211,17 @@ export default function NewChecklistPage() {
                 placeholder="Type your name to sign"
                 required
               />
+              <p className="text-xs text-gray-400 mt-1">Type your name as your digital signature</p>
             </div>
           </div>
         </div>
 
+        {/* Attachments */}
         <div className="card">
-          <h3 className="font-semibold text-lg text-gray-900 mb-4">Attachments</h3>
+          <div className="mb-4">
+            <h3 className="font-bold text-gray-900 mb-1">Photo / Video Attachments</h3>
+            <p className="text-gray-500 text-sm">Upload photos of any faults or damage found</p>
+          </div>
 
           <input
             ref={fileInputRef}
@@ -205,14 +232,14 @@ export default function NewChecklistPage() {
             className="hidden"
           />
 
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-3 mb-4">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="btn-secondary flex items-center gap-2"
+              className="btn-secondary btn-sm flex items-center gap-2"
             >
               <Upload className="w-4 h-4" />
-              Upload Photo/Video
+              Upload from device
             </button>
             <button
               type="button"
@@ -222,10 +249,10 @@ export default function NewChecklistPage() {
                   fileInputRef.current.click()
                 }
               }}
-              className="btn-secondary flex items-center gap-2"
+              className="btn-secondary btn-sm flex items-center gap-2"
             >
               <Camera className="w-4 h-4" />
-              Take Photo
+              Take a photo
             </button>
           </div>
 
@@ -234,13 +261,14 @@ export default function NewChecklistPage() {
               {files.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded-[4px]"
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100"
                 >
                   <span className="text-sm text-gray-700 truncate">{file.name}</span>
                   <button
                     type="button"
                     onClick={() => removeFile(index)}
-                    className="text-gray-500 hover:text-red-500"
+                    className="text-gray-400 hover:text-red-500 transition-colors ml-2 flex-shrink-0"
+                    aria-label="Remove file"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -250,13 +278,20 @@ export default function NewChecklistPage() {
           )}
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full flex items-center justify-center text-lg py-3"
+          className="btn-primary w-full flex items-center justify-center text-lg py-4"
         >
-          {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit Checklist'}
+          {loading
+            ? <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Submitting…</>
+            : 'Submit Checklist'}
         </button>
+
+        <p className="text-center text-xs text-gray-400">
+          Your submission will be reviewed by an administrator
+        </p>
       </form>
     </div>
   )
