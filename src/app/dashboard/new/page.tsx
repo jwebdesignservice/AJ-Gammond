@@ -56,6 +56,14 @@ export default function NewChecklistPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
+      // Ensure profile exists (creates it if missing)
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        email: user.email ?? '',
+        name: user.user_metadata?.name ?? name,
+        role: 'user',
+      }, { onConflict: 'id', ignoreDuplicates: true })
+
       // Upload files
       const mediaUrls: string[] = []
       for (const file of files) {
@@ -116,8 +124,12 @@ export default function NewChecklistPage() {
 
       router.push('/dashboard')
       router.refresh()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
+    } catch (err: unknown) {
+      const msg =
+        (err as { message?: string })?.message ??
+        JSON.stringify(err) ??
+        'Something went wrong. Please try again.'
+      setError(msg)
       setLoading(false)
     }
   }
