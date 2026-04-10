@@ -13,15 +13,15 @@ body {
 
 /* Buttons */
 .btn-primary {
-  @apply bg-[#1B4332] text-white px-5 py-3 rounded-xl hover:bg-[#2D6A4F] active:bg-[#143728] transition-colors font-semibold text-base shadow-sm;
+  @apply bg-[#1B4332] text-white px-5 py-3 rounded-xl hover:bg-[#2D6A4F] transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-secondary {
-  @apply bg-white text-gray-700 px-5 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition-colors font-semibold text-base shadow-sm;
+  @apply bg-white text-gray-700 px-5 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-danger {
-  @apply bg-red-600 text-white px-5 py-3 rounded-xl hover:bg-red-700 active:bg-red-800 transition-colors font-semibold text-base shadow-sm;
+  @apply bg-red-600 text-white px-5 py-3 rounded-xl hover:bg-red-700 transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-sm {
@@ -39,5 +39,5 @@ body {
 }
 
 .card-hover {
-  @apply card hover:shadow-md hover:border-gray-200 transition-all cursor-pointer;
+  @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer;
 }
