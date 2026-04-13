@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { name, siteItems, machineItems, comment, submittedAt } = body
 
-    // ── Email config from environment ────────────────────────────────────
     const host = process.env.EMAIL_HOST
     const port = Number(process.env.EMAIL_PORT ?? 587)
     const user = process.env.EMAIL_USER
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
     const to   = process.env.ADMIN_EMAIL
 
     if (!host || !user || !pass || !to) {
-      // Email not configured — log and return 200 so the form still works
       console.warn('[send-submission] Email env vars not configured. Skipping email.')
       return NextResponse.json({ ok: true, skipped: true })
     }
@@ -108,7 +106,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[send-submission] Error:', err)
-    // Return 200 so client-side doesn't throw — email failure shouldn't block submission
     return NextResponse.json({ ok: false, error: String(err) }, { status: 200 })
   }
 }
