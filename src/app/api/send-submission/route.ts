@@ -57,10 +57,11 @@ export async function POST(req: NextRequest) {
       auth: { user, pass },
     })
 
-    const subject = `New Safety Checklist Submission — ${name} (${submittedAt})`
+    const subject = `AJ Gammond | Daily Safety & Maintenance Checklist — ${name} (${submittedAt})`
 
     const text = [
-      `New Daily Safety Checklist submitted`,
+      `AJ Gammond — Daily Safety & Maintenance Checklist`,
+      `New submission received`,
       ``,
       `Submitted by: ${name}`,
       `Date/Time:    ${submittedAt}`,
@@ -78,8 +79,8 @@ export async function POST(req: NextRequest) {
 
     const html = `
 <div style="font-family:sans-serif;max-width:640px;margin:auto;background:#f9fafb;padding:24px;border-radius:8px;">
-  <h2 style="color:#111827;margin-top:0;">📋 New Safety Checklist Submission</h2>
-  <p style="color:#6b7280;font-size:14px;">Submitted by <strong style="color:#111827;">${name}</strong> on ${submittedAt}</p>
+  <h2 style="color:#111827;margin-top:0;">📋 AJ Gammond — Daily Safety &amp; Maintenance Checklist</h2>
+  <p style="color:#6b7280;font-size:14px;">New submission from <strong style="color:#111827;">${name}</strong> on ${submittedAt}</p>
 
   <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;margin-bottom:16px;">
     <h3 style="margin-top:0;color:#374151;font-size:15px;">Site Induction &amp; Safety</h3>
