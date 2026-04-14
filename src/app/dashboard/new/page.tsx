@@ -235,70 +235,34 @@ export default function NewChecklistPage() {
               <label htmlFor="machineType" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Machine Type <span className="text-red-500">*</span>
               </label>
-              {/* Dropdown — mobile & tablet */}
               <select
                 id="machineType"
                 value={machineType}
                 onChange={(e) => setMachineType(e.target.value as MachineType)}
-                className="input md:hidden"
+                className="input"
               >
                 <option value="">Select machine type…</option>
                 {(['Trencher', 'Rocksaw', 'Rock Hawg'] as MachineType[]).map((type) => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </select>
-              {/* Pill buttons — desktop */}
-              <div className="hidden md:flex flex-wrap gap-2">
-                {(['Trencher', 'Rocksaw', 'Rock Hawg'] as MachineType[]).map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setMachineType(type)}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${
-                      machineType === type
-                        ? 'bg-gray-900 text-white border-gray-900'
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
             </div>
 
             <div>
               <label htmlFor="machineCode" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Machine Code <span className="text-red-500">*</span>
               </label>
-              {/* Dropdown — mobile & tablet */}
               <select
                 id="machineCode"
                 value={machineCode}
                 onChange={(e) => setMachineCode(e.target.value as MachineCode)}
-                className="input md:hidden"
+                className="input"
               >
                 <option value="">Select machine code…</option>
                 {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as MachineCode[]).map((code) => (
                   <option key={code} value={code}>{code}</option>
                 ))}
               </select>
-              {/* Pill buttons — desktop */}
-              <div className="hidden md:flex flex-wrap gap-2">
-                {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as MachineCode[]).map((code) => (
-                  <button
-                    key={code}
-                    type="button"
-                    onClick={() => setMachineCode(code)}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${
-                      machineCode === code
-                        ? 'bg-gray-900 text-white border-gray-900'
-                        : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
-                    }`}
-                  >
-                    {code}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </div>
