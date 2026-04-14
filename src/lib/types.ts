@@ -25,6 +25,33 @@ export interface FormData {
   signature: string
 }
 
+export interface SiteRecordRow {
+  date: string
+  description: string
+  width: string
+  depth: string
+  length: string
+  shift: 'Day' | 'Night' | ''
+  hrs: string
+  picks: string
+}
+
+export interface SiteRecord {
+  id: string
+  user_id: string
+  created_at: string
+  status: SubmissionStatus
+  customer: string
+  machine_type: string
+  site_address: string
+  machine_code: string
+  rows: SiteRecordRow[]
+  works_agreed_by: string
+  capacity: string
+  signed_in_presence_of: string
+  ajg_rep_signature: string
+}
+
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected' | 'needs_review'
 
 export interface Submission {

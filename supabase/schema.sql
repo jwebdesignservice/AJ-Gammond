@@ -113,6 +113,49 @@ create policy "Admins can create notes"
     public.is_admin()
   );
 
+-- Site records table
+create table if not exists public.site_records (
+  id                    uuid default uuid_generate_v4() primary key,
+  user_id               uuid references public.profiles on delete cascade not null,
+  created_at            timestamp with time zone default timezone('utc'::text, now()) not null,
+  status                text not null default 'pending' check (status in ('pending', 'approved', 'rejected', 'needs_review')),
+  customer              text not null,
+  machine_type          text not null,
+  site_address          text not null,
+  machine_code          text not null,
+  rows                  jsonb not null default '[]',
+  works_agreed_by       text not null,
+  capacity              text,
+  signed_in_presence_of text,
+  ajg_rep_signature     text
+);
+
+alter table public.site_records enable row level security;
+
+drop policy if exists "Users can view own site records" on public.site_records;
+create policy "Users can view own site records"
+  on public.site_records for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can create site records" on public.site_records;
+create policy "Users can create site records"
+  on public.site_records for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Admins can view all site records" on public.site_records;
+create policy "Admins can view all site records"
+  on public.site_records for select
+  using (public.is_admin());
+
+drop policy if exists "Admins can update all site records" on public.site_records;
+create policy "Admins can update all site records"
+  on public.site_records for update
+  using (public.is_admin());
+
+create index if not exists site_records_user_id_idx   on public.site_records(user_id);
+create index if not exists site_records_status_idx    on public.site_records(status);
+create index if not exists site_records_created_at_idx on public.site_records(created_at desc);
+
 -- ── Storage bucket ─────────────────────────────────────────────────────────
 insert into storage.buckets (id, name, public)
 values ('submissions', 'submissions', true)
