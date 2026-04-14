@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
-import { CheckItem, CheckValue, FormData } from '@/lib/types'
+import { CheckItem, CheckValue, FormData, MachineType, MachineCode } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
 import { Loader2, Upload, X, Camera, Info } from 'lucide-react'
 
@@ -14,6 +14,10 @@ export default function NewChecklistPage() {
   const [machineItems, setMachineItems] = useState<CheckItem[]>(
     JSON.parse(JSON.stringify(machineCheckItems))
   )
+  const [contractor, setContractor] = useState('')
+  const [siteAddress, setSiteAddress] = useState('')
+  const [machineType, setMachineType] = useState<MachineType | ''>('')
+  const [machineCode, setMachineCode] = useState<MachineCode | ''>('')
   const [comment, setComment] = useState('')
   const [name, setName] = useState('')
   const [signature, setSignature] = useState('')
@@ -51,6 +55,12 @@ export default function NewChecklistPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Validate job details
+    if (!contractor.trim() || !siteAddress.trim() || !machineType || !machineCode) {
+      setError('Please complete all job details — Contractor, Site Address, Machine Type and Machine Code are required.')
+      return
+    }
 
     // Validate all checklist items are answered
     const unanswered = [
@@ -96,6 +106,10 @@ export default function NewChecklistPage() {
 
       // Build form data
       const formData: FormData = {
+        contractor,
+        siteAddress,
+        machineType: machineType as MachineType,
+        machineCode: machineCode as MachineCode,
         siteInduction: siteItems,
         machineChecks: machineItems,
         comment,
@@ -125,6 +139,10 @@ export default function NewChecklistPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name,
+            contractor,
+            siteAddress,
+            machineType,
+            machineCode,
             siteItems,
             machineItems,
             comment,
@@ -172,6 +190,90 @@ export default function NewChecklistPage() {
             {error}
           </div>
         )}
+
+        {/* Job Details */}
+        <div className="card space-y-5">
+          <div>
+            <h3 className="font-bold text-gray-900 mb-1">Job Details</h3>
+            <p className="text-gray-500 text-sm">Fill in site and machine information before starting</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="contractor" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Contractor <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="contractor"
+                type="text"
+                value={contractor}
+                onChange={(e) => setContractor(e.target.value)}
+                className="input"
+                placeholder="Company / contractor name"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="siteAddress" className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Site Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="siteAddress"
+                type="text"
+                value={siteAddress}
+                onChange={(e) => setSiteAddress(e.target.value)}
+                className="input"
+                placeholder="Full site address"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Machine Type <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {(['Trencher', 'Rocksaw', 'Rock Hawg'] as MachineType[]).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setMachineType(type)}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${
+                    machineType === type
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Machine Code <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as MachineCode[]).map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  onClick={() => setMachineCode(code)}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-colors ${
+                    machineCode === code
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
+                  }`}
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* Checklist grids */}
         <ChecklistGrid

@@ -36,7 +36,7 @@ function buildChecklistHtml(items: CheckItem[]): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, siteItems, machineItems, comment, submittedAt } = body
+    const { name, contractor, siteAddress, machineType, machineCode, siteItems, machineItems, comment, submittedAt } = body
 
     const host = process.env.EMAIL_HOST
     const port = Number(process.env.EMAIL_PORT ?? 587)
@@ -65,6 +65,10 @@ export async function POST(req: NextRequest) {
       ``,
       `Submitted by: ${name}`,
       `Date/Time:    ${submittedAt}`,
+      contractor   ? `Contractor:   ${contractor}`   : '',
+      siteAddress  ? `Site Address: ${siteAddress}`  : '',
+      machineType  ? `Machine Type: ${machineType}`  : '',
+      machineCode  ? `Machine Code: ${machineCode}`  : '',
       ``,
       `── SITE INDUCTION & SAFETY ──`,
       buildChecklistSummary(siteItems ?? []),
@@ -81,6 +85,17 @@ export async function POST(req: NextRequest) {
 <div style="font-family:sans-serif;max-width:640px;margin:auto;background:#f9fafb;padding:24px;border-radius:8px;">
   <h2 style="color:#111827;margin-top:0;">📋 AJ Gammond — Daily Safety &amp; Maintenance Checklist</h2>
   <p style="color:#6b7280;font-size:14px;">New submission from <strong style="color:#111827;">${name}</strong> on ${submittedAt}</p>
+
+  ${(contractor || siteAddress || machineType || machineCode) ? `
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;margin-bottom:16px;">
+    <h3 style="margin-top:0;color:#374151;font-size:15px;">Job Details</h3>
+    <table style="width:100%;border-collapse:collapse;">
+      ${contractor  ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;width:140px;">Contractor</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${contractor}</td></tr>` : ''}
+      ${siteAddress ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Site Address</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${siteAddress}</td></tr>` : ''}
+      ${machineType ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Machine Type</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${machineType}</td></tr>` : ''}
+      ${machineCode ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Machine Code</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${machineCode}</td></tr>` : ''}
+    </table>
+  </div>` : ''}
 
   <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;margin-bottom:16px;">
     <h3 style="margin-top:0;color:#374151;font-size:15px;">Site Induction &amp; Safety</h3>

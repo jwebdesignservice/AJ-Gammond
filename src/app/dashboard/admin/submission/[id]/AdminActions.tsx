@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { SubmissionStatus } from '@/lib/types'
 import { Check, X, MessageSquare, AlertCircle, Loader2 } from 'lucide-react'
+import { updateSubmissionStatus, addSubmissionNote } from './actions'
 
 interface AdminActionsProps {
   submissionId: string
@@ -16,38 +16,14 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
-  const supabase = createClient()
 
-  const updateStatus = async (status: SubmissionStatus, addNote?: boolean) => {
+  const handleStatusUpdate = async (status: SubmissionStatus, includeNote: boolean) => {
     setError('')
     setLoading(true)
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      // Update status
-      const { error: updateError } = await supabase
-        .from('submissions')
-        .update({ status })
-        .eq('id', submissionId)
-
-      if (updateError) throw updateError
-
-      // Add note if provided
-      if (addNote && note.trim()) {
-        const { error: noteError } = await supabase
-          .from('submission_notes')
-          .insert({
-            submission_id: submissionId,
-            admin_id: user.id,
-            note: note.trim(),
-          })
-
-        if (noteError) throw noteError
-        setNote('')
-      }
-
+      await updateSubmissionStatus(submissionId, status, includeNote ? note : undefined)
+      if (includeNote && note.trim()) setNote('')
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -56,25 +32,14 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
     }
   }
 
-  const addNoteOnly = async () => {
+  const handleAddNoteOnly = async () => {
     if (!note.trim()) return
-    
+
     setError('')
     setLoading(true)
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      const { error: noteError } = await supabase
-        .from('submission_notes')
-        .insert({
-          submission_id: submissionId,
-          admin_id: user.id,
-          note: note.trim(),
-        })
-
-      if (noteError) throw noteError
+      await addSubmissionNote(submissionId, note)
       setNote('')
       router.refresh()
     } catch (err) {
@@ -109,7 +74,7 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
 
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => updateStatus('approved', true)}
+          onClick={() => handleStatusUpdate('approved', true)}
           disabled={loading || currentStatus === 'approved'}
           className="btn-primary flex items-center gap-2 bg-green-600 hover:bg-green-700 disabled:opacity-50"
         >
@@ -118,7 +83,7 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
         </button>
 
         <button
-          onClick={() => updateStatus('rejected', true)}
+          onClick={() => handleStatusUpdate('rejected', true)}
           disabled={loading || currentStatus === 'rejected'}
           className="btn-danger flex items-center gap-2 disabled:opacity-50"
         >
@@ -127,7 +92,7 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
         </button>
 
         <button
-          onClick={() => updateStatus('needs_review', true)}
+          onClick={() => handleStatusUpdate('needs_review', true)}
           disabled={loading || currentStatus === 'needs_review'}
           className="btn-secondary flex items-center gap-2 bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50"
         >
@@ -136,7 +101,7 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
         </button>
 
         <button
-          onClick={addNoteOnly}
+          onClick={handleAddNoteOnly}
           disabled={loading || !note.trim()}
           className="btn-secondary flex items-center gap-2 disabled:opacity-50"
         >

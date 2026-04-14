@@ -10,7 +10,14 @@ export interface CheckItem {
   values?: Record<DayOfWeek, CheckValue>         // legacy: old multi-day submissions
 }
 
+export type MachineType = 'Trencher' | 'Rocksaw' | 'Rock Hawg'
+export type MachineCode = '030' | '066' | '1405' | '1408' | '1409' | '1421' | '1427' | '1428' | '1431' | '2401'
+
 export interface FormData {
+  contractor: string
+  siteAddress: string
+  machineType: MachineType | ''
+  machineCode: MachineCode | ''
   siteInduction: CheckItem[]
   machineChecks: CheckItem[]
   comment: string

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -99,6 +101,39 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
         </div>
         <StatusBadge status={submission.status} />
       </div>
+
+      {/* Job Details */}
+      {(formData.contractor || formData.siteAddress || formData.machineType || formData.machineCode) && (
+        <div className="card">
+          <h3 className="font-bold text-gray-900 mb-4">Job Details</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {formData.contractor && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Contractor</p>
+                <p className="text-gray-900 font-medium">{formData.contractor}</p>
+              </div>
+            )}
+            {formData.siteAddress && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Site Address</p>
+                <p className="text-gray-900 font-medium">{formData.siteAddress}</p>
+              </div>
+            )}
+            {formData.machineType && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Machine Type</p>
+                <p className="text-gray-900 font-medium">{formData.machineType}</p>
+              </div>
+            )}
+            {formData.machineCode && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Machine Code</p>
+                <p className="text-gray-900 font-medium">{formData.machineCode}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Checklists */}
       <ChecklistReadOnly title="Site Induction & Safety" items={formData.siteInduction} />
