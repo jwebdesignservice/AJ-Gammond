@@ -1,238 +1,179 @@
--- AJ Gammond Safety Checklist - Database Schema
--- Safe to run multiple times - handles existing objects gracefully
+-- AJ Gammond — Full Database Schema
+-- Safe to run multiple times (uses IF NOT EXISTS, DROP IF EXISTS, OR REPLACE)
+-- Run this in Supabase SQL Editor on a fresh project, or to restore after data loss.
 
--- Enable UUID extension
-create extension if not exists "uuid-ossp";
+-- ── Extensions ─────────────────────────────────────────────────────────────
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Profiles table (extends auth.users)
-create table if not exists public.profiles (
-  id uuid references auth.users on delete cascade primary key,
-  email text not null,
-  name text,
-  role text not null default 'user' check (role in ('user', 'admin')),
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+-- ── Tables ─────────────────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id         UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  email      TEXT NOT NULL,
+  name       TEXT,
+  role       TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
--- Submissions table
-create table if not exists public.submissions (
-  id uuid default uuid_generate_v4() primary key,
-  user_id uuid references public.profiles on delete cascade not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected', 'needs_review')),
-  form_data jsonb not null,
-  comment text,
-  name text not null,
-  signature text not null,
-  media_urls text[] default '{}'
+CREATE TABLE IF NOT EXISTS public.submissions (
+  id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id    UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  status     TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
+  form_data  JSONB NOT NULL,
+  comment    TEXT,
+  name       TEXT NOT NULL,
+  signature  TEXT NOT NULL,
+  media_urls TEXT[] DEFAULT '{}'
 );
 
--- Submission notes table
-create table if not exists public.submission_notes (
-  id uuid default uuid_generate_v4() primary key,
-  submission_id uuid references public.submissions on delete cascade not null,
-  admin_id uuid references public.profiles not null,
-  note text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+CREATE TABLE IF NOT EXISTS public.submission_notes (
+  id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  submission_id UUID REFERENCES public.submissions ON DELETE CASCADE NOT NULL,
+  admin_id      UUID REFERENCES public.profiles NOT NULL,
+  note          TEXT NOT NULL,
+  created_at    TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
--- Enable Row Level Security
-alter table public.profiles enable row level security;
-alter table public.submissions enable row level security;
-alter table public.submission_notes enable row level security;
-
--- ── Profiles policies ──────────────────────────────────────────────────────
-drop policy if exists "Users can view own profile" on public.profiles;
-create policy "Users can view own profile"
-  on public.profiles for select
-  using (auth.uid() = id);
-
-drop policy if exists "Users can update own profile" on public.profiles;
-create policy "Users can update own profile"
-  on public.profiles for update
-  using (auth.uid() = id);
-
-drop policy if exists "Users can insert own profile" on public.profiles;
-create policy "Users can insert own profile"
-  on public.profiles for insert
-  with check (auth.uid() = id);
-
-drop policy if exists "Admins can view all profiles" on public.profiles;
-create policy "Admins can view all profiles"
-  on public.profiles for select
-  using (
-    public.is_admin()
-  );
-
--- ── Submissions policies ───────────────────────────────────────────────────
-drop policy if exists "Users can view own submissions" on public.submissions;
-create policy "Users can view own submissions"
-  on public.submissions for select
-  using (auth.uid() = user_id);
-
-drop policy if exists "Users can create submissions" on public.submissions;
-create policy "Users can create submissions"
-  on public.submissions for insert
-  with check (auth.uid() = user_id);
-
-drop policy if exists "Admins can view all submissions" on public.submissions;
-create policy "Admins can view all submissions"
-  on public.submissions for select
-  using (
-    public.is_admin()
-  );
-
-drop policy if exists "Admins can update all submissions" on public.submissions;
-create policy "Admins can update all submissions"
-  on public.submissions for update
-  using (
-    public.is_admin()
-  );
-
--- ── Submission notes policies ──────────────────────────────────────────────
-drop policy if exists "Users can view notes on own submissions" on public.submission_notes;
-create policy "Users can view notes on own submissions"
-  on public.submission_notes for select
-  using (
-    exists (
-      select 1 from public.submissions
-      where id = submission_id and user_id = auth.uid()
-    )
-  );
-
-drop policy if exists "Admins can view all notes" on public.submission_notes;
-create policy "Admins can view all notes"
-  on public.submission_notes for select
-  using (
-    public.is_admin()
-  );
-
-drop policy if exists "Admins can create notes" on public.submission_notes;
-create policy "Admins can create notes"
-  on public.submission_notes for insert
-  with check (
-    public.is_admin()
-  );
-
--- Site records table
-create table if not exists public.site_records (
-  id                    uuid default uuid_generate_v4() primary key,
-  user_id               uuid references public.profiles on delete cascade not null,
-  created_at            timestamp with time zone default timezone('utc'::text, now()) not null,
-  status                text not null default 'pending' check (status in ('pending', 'approved', 'rejected', 'needs_review')),
-  customer              text not null,
-  machine_type          text not null,
-  site_address          text not null,
-  machine_code          text not null,
-  rows                  jsonb not null default '[]',
-  materials             text[] default '{}',
-  works_agreed_by       text not null,
-  capacity              text,
-  signed_in_presence_of text,
-  ajg_rep_signature     text
+CREATE TABLE IF NOT EXISTS public.site_records (
+  id                    UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id               UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
+  created_at            TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
+  customer              TEXT NOT NULL,
+  machine_type          TEXT NOT NULL,
+  site_address          TEXT NOT NULL,
+  machine_code          TEXT NOT NULL,
+  rows                  JSONB NOT NULL DEFAULT '[]',
+  materials             TEXT[] DEFAULT '{}',
+  works_agreed_by       TEXT NOT NULL,
+  capacity              TEXT,
+  signed_in_presence_of TEXT,
+  ajg_rep_signature     TEXT
 );
 
-alter table public.site_records enable row level security;
+-- ── Enable RLS ──────────────────────────────────────────────────────────────
+ALTER TABLE public.profiles         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.submissions       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.submission_notes  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_records      ENABLE ROW LEVEL SECURITY;
 
-drop policy if exists "Users can view own site records" on public.site_records;
-create policy "Users can view own site records"
-  on public.site_records for select
-  using (auth.uid() = user_id);
+-- ── Functions (must be defined BEFORE policies that reference them) ─────────
 
-drop policy if exists "Users can create site records" on public.site_records;
-create policy "Users can create site records"
-  on public.site_records for insert
-  with check (auth.uid() = user_id);
-
-drop policy if exists "Admins can view all site records" on public.site_records;
-create policy "Admins can view all site records"
-  on public.site_records for select
-  using (public.is_admin());
-
-drop policy if exists "Admins can update all site records" on public.site_records;
-create policy "Admins can update all site records"
-  on public.site_records for update
-  using (public.is_admin());
-
-create index if not exists site_records_user_id_idx   on public.site_records(user_id);
-create index if not exists site_records_status_idx    on public.site_records(status);
-create index if not exists site_records_created_at_idx on public.site_records(created_at desc);
-
--- ── Storage bucket ─────────────────────────────────────────────────────────
-insert into storage.buckets (id, name, public)
-values ('submissions', 'submissions', true)
-on conflict (id) do nothing;
-
-drop policy if exists "Users can upload to own folder" on storage.objects;
-create policy "Users can upload to own folder"
-  on storage.objects for insert
-  with check (
-    bucket_id = 'submissions' and
-    (storage.foldername(name))[1] = auth.uid()::text
-  );
-
-drop policy if exists "Anyone can view submission files" on storage.objects;
-create policy "Anyone can view submission files"
-  on storage.objects for select
-  using (bucket_id = 'submissions');
-
--- ── Admin check helper (SECURITY DEFINER breaks RLS recursion) ─────────────
--- All policies that check admin role use this function to avoid infinite
--- recursion (admin policy on submissions queries profiles, which triggers
--- the admin policy on profiles, which queries profiles again).
-create or replace function public.is_admin()
-returns boolean as $$
-  select exists (
-    select 1 from public.profiles
-    where id = auth.uid() and role = 'admin'
+-- Admin check — SECURITY DEFINER so it runs as DB owner and bypasses RLS,
+-- preventing infinite recursion when policies on profiles call this function.
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
   )
-$$ language sql security definer stable;
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
 
--- ── Ensure profile helper (SECURITY DEFINER bypasses RLS) ─────────────────
-create or replace function public.ensure_profile(
-  p_id uuid,
-  p_email text,
-  p_name text
-) returns void as $$
-begin
-  insert into public.profiles (id, email, name, role)
-  values (p_id, p_email, p_name, 'user')
-  on conflict (id) do nothing;
-end;
-$$ language plpgsql security definer;
+-- Ensure profile exists — called on checklist submit to handle users created
+-- before the signup trigger was in place.
+CREATE OR REPLACE FUNCTION public.ensure_profile(
+  p_id    UUID,
+  p_email TEXT,
+  p_name  TEXT
+) RETURNS VOID AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, name, role)
+  VALUES (p_id, p_email, p_name, 'user')
+  ON CONFLICT (id) DO NOTHING;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- ── Auto-create profile on signup ──────────────────────────────────────────
-create or replace function public.handle_new_user()
-returns trigger as $$
-begin
-  insert into public.profiles (id, email, name, role)
-  values (
-    new.id,
-    new.email,
-    coalesce(new.raw_user_meta_data->>'name', ''),
+-- Auto-create profile on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email, name, role)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(NEW.raw_user_meta_data->>'name', ''),
     'user'
   )
-  on conflict (id) do nothing;
-  return new;
-end;
-$$ language plpgsql security definer;
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
--- ── Backfill profiles for any existing auth users ──────────────────────────
-insert into public.profiles (id, email, name, role)
-select
-  id,
-  email,
-  coalesce(raw_user_meta_data->>'name', ''),
-  'user'
-from auth.users
-on conflict (id) do nothing;
+-- ── Policies: profiles ──────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Users can view own profile"    ON public.profiles;
+DROP POLICY IF EXISTS "Users can update own profile"  ON public.profiles;
+DROP POLICY IF EXISTS "Users can insert own profile"  ON public.profiles;
+DROP POLICY IF EXISTS "Admins can view all profiles"  ON public.profiles;
 
--- ── Indexes ────────────────────────────────────────────────────────────────
-create index if not exists submissions_user_id_idx on public.submissions(user_id);
-create index if not exists submissions_status_idx on public.submissions(status);
-create index if not exists submissions_created_at_idx on public.submissions(created_at desc);
-create index if not exists submission_notes_submission_id_idx on public.submission_notes(submission_id);
+CREATE POLICY "Users can view own profile"   ON public.profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users can insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Admins can view all profiles" ON public.profiles FOR SELECT USING (public.is_admin());
+
+-- ── Policies: submissions ───────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Users can view own submissions"   ON public.submissions;
+DROP POLICY IF EXISTS "Users can create submissions"     ON public.submissions;
+DROP POLICY IF EXISTS "Admins can view all submissions"  ON public.submissions;
+DROP POLICY IF EXISTS "Admins can update all submissions" ON public.submissions;
+
+CREATE POLICY "Users can view own submissions"    ON public.submissions FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can create submissions"      ON public.submissions FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Admins can view all submissions"   ON public.submissions FOR SELECT USING (public.is_admin());
+CREATE POLICY "Admins can update all submissions" ON public.submissions FOR UPDATE USING (public.is_admin());
+
+-- ── Policies: submission_notes ──────────────────────────────────────────────
+DROP POLICY IF EXISTS "Users can view notes on own submissions" ON public.submission_notes;
+DROP POLICY IF EXISTS "Admins can view all notes"               ON public.submission_notes;
+DROP POLICY IF EXISTS "Admins can create notes"                 ON public.submission_notes;
+
+CREATE POLICY "Users can view notes on own submissions" ON public.submission_notes FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.submissions WHERE id = submission_id AND user_id = auth.uid()));
+CREATE POLICY "Admins can view all notes" ON public.submission_notes FOR SELECT USING (public.is_admin());
+CREATE POLICY "Admins can create notes"   ON public.submission_notes FOR INSERT WITH CHECK (public.is_admin());
+
+-- ── Policies: site_records ──────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Users can view own site records"   ON public.site_records;
+DROP POLICY IF EXISTS "Users can create site records"     ON public.site_records;
+DROP POLICY IF EXISTS "Admins can view all site records"  ON public.site_records;
+DROP POLICY IF EXISTS "Admins can update all site records" ON public.site_records;
+
+CREATE POLICY "Users can view own site records"    ON public.site_records FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can create site records"      ON public.site_records FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Admins can view all site records"   ON public.site_records FOR SELECT USING (public.is_admin());
+CREATE POLICY "Admins can update all site records" ON public.site_records FOR UPDATE USING (public.is_admin());
+
+-- ── Storage bucket ──────────────────────────────────────────────────────────
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('submissions', 'submissions', true)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Users can upload to own folder"  ON storage.objects;
+DROP POLICY IF EXISTS "Anyone can view submission files" ON storage.objects;
+
+CREATE POLICY "Users can upload to own folder" ON storage.objects FOR INSERT
+  WITH CHECK (bucket_id = 'submissions' AND (storage.foldername(name))[1] = auth.uid()::text);
+CREATE POLICY "Anyone can view submission files" ON storage.objects FOR SELECT
+  USING (bucket_id = 'submissions');
+
+-- ── Indexes ─────────────────────────────────────────────────────────────────
+CREATE INDEX IF NOT EXISTS submissions_user_id_idx          ON public.submissions(user_id);
+CREATE INDEX IF NOT EXISTS submissions_status_idx           ON public.submissions(status);
+CREATE INDEX IF NOT EXISTS submissions_created_at_idx       ON public.submissions(created_at DESC);
+CREATE INDEX IF NOT EXISTS submission_notes_submission_id_idx ON public.submission_notes(submission_id);
+CREATE INDEX IF NOT EXISTS site_records_user_id_idx         ON public.site_records(user_id);
+CREATE INDEX IF NOT EXISTS site_records_status_idx          ON public.site_records(status);
+CREATE INDEX IF NOT EXISTS site_records_created_at_idx      ON public.site_records(created_at DESC);
+
+-- ── Backfill profiles for any existing auth users ───────────────────────────
+INSERT INTO public.profiles (id, email, name, role)
+SELECT id, email, COALESCE(raw_user_meta_data->>'name', ''), 'user'
+FROM auth.users
+ON CONFLICT (id) DO NOTHING;
+
+SELECT 'AJ Gammond schema applied successfully' AS status;
