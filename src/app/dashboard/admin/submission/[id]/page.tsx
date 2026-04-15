@@ -6,6 +6,7 @@ import StatusBadge from '@/components/StatusBadge'
 import ChecklistGrid from '@/components/ChecklistGrid'
 import { FormData, SubmissionNote } from '@/lib/types'
 import AdminActions from './AdminActions'
+import DownloadPdfButton from '@/components/DownloadPdfButton'
 
 export default async function AdminSubmissionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -68,6 +69,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
             })}
           </p>
         </div>
+        <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} />
         <StatusBadge status={submission.status} />
       </div>
 
@@ -81,6 +83,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
         </div>
       </div>
 
+      <div id="pdf-content" className="space-y-6">
       <ChecklistGrid
         title="Site Induction & Safety"
         items={formData.siteInduction}
@@ -142,6 +145,8 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </div>
         </div>
       )}
+
+      </div>
 
       <AdminActions submissionId={id} currentStatus={submission.status} />
 

@@ -10,6 +10,7 @@ export default function AdminFilters() {
   
   const [search, setSearch] = useState(searchParams.get('search') || '')
   const [status, setStatus] = useState(searchParams.get('status') || 'all')
+  const [type, setType] = useState(searchParams.get('type') || 'all')
   const [from, setFrom] = useState(searchParams.get('from') || '')
   const [to, setTo] = useState(searchParams.get('to') || '')
 
@@ -17,6 +18,7 @@ export default function AdminFilters() {
     const params = new URLSearchParams()
     if (search) params.set('search', search)
     if (status !== 'all') params.set('status', status)
+    if (type !== 'all') params.set('type', type)
     if (from) params.set('from', from)
     if (to) params.set('to', to)
     
@@ -26,6 +28,7 @@ export default function AdminFilters() {
   const clearFilters = () => {
     setSearch('')
     setStatus('all')
+    setType('all')
     setFrom('')
     setTo('')
     router.push('/dashboard/admin')
@@ -38,7 +41,7 @@ export default function AdminFilters() {
         <span className="font-medium">Filters</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
           <div className="relative">
@@ -65,6 +68,19 @@ export default function AdminFilters() {
             <option value="approved">Approved</option>
             <option value="rejected">Rejected</option>
             <option value="needs_review">Needs Review</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="input"
+          >
+            <option value="all">All</option>
+            <option value="checklist">Checklists</option>
+            <option value="site_record">Site Records</option>
           </select>
         </div>
 
