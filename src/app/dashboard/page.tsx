@@ -37,16 +37,19 @@ type CombinedEntry =
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ filter?: string }>
+  searchParams: Promise<{ filter?: string; type?: string }>
 }) {
-  const { filter = 'all' } = await searchParams
+  const { filter = 'all', type = 'all' } = await searchParams
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
 
   const range = getDateRange(filter)
 
-  // Fetch checklists
+  const showChecklists  = type === 'all' || type === 'checklist'
+  const showSiteRecords = type === 'all' || type === 'site_record'
+
+  // Fetch checklists (skip if type filter excludes them)
   let checklistQuery = supabase
     .from('submissions')
     .select('*')
@@ -57,7 +60,7 @@ export default async function DashboardPage({
     checklistQuery = checklistQuery.gte('created_at', range.from).lte('created_at', range.to)
   }
 
-  // Fetch site records
+  // Fetch site records (skip if type filter excludes them)
   let siteRecordQuery = supabase
     .from('site_records')
     .select('*')
@@ -68,10 +71,13 @@ export default async function DashboardPage({
     siteRecordQuery = siteRecordQuery.gte('created_at', range.from).lte('created_at', range.to)
   }
 
-  const [{ data: submissions }, { data: siteRecords }] = await Promise.all([
-    checklistQuery,
-    siteRecordQuery,
+  const [checklistResult, siteRecordResult] = await Promise.all([
+    showChecklists  ? checklistQuery  : Promise.resolve({ data: [] }),
+    showSiteRecords ? siteRecordQuery : Promise.resolve({ data: [] }),
   ])
+
+  const submissions  = checklistResult.data
+  const siteRecords  = siteRecordResult.data
 
   // Combine and sort by date
   const combined: CombinedEntry[] = [
@@ -86,6 +92,12 @@ export default async function DashboardPage({
     today: 'today',
     week: 'this week',
     month: 'this month',
+  }
+
+  const typeLabel: Record<string, string> = {
+    all: '',
+    checklist: 'checklists only',
+    site_record: 'site records only',
   }
 
   return (
@@ -154,6 +166,7 @@ export default async function DashboardPage({
           <p className="text-sm text-gray-500 font-medium px-1">
             {combined.length} submission{combined.length !== 1 ? 's' : ''}{' '}
             {filter !== 'all' && `· ${filterLabel[filter]}`}
+            {type !== 'all' && ` · ${typeLabel[type]}`}
           </p>
           {combined.map((entry) => {
             const isChecklist = entry.type === 'checklist'
