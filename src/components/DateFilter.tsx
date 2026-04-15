@@ -15,23 +15,6 @@ const typeFilters = [
   { label: 'Site Records', value: 'site_record' },
 ]
 
-function FilterChip({
-  label, active, onClick,
-}: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${
-        active
-          ? 'bg-[#1B4332] text-white'
-          : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-      }`}
-    >
-      {label}
-    </button>
-  )
-}
-
 export default function DateFilter() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -49,29 +32,48 @@ export default function DateFilter() {
   }
 
   return (
-    <div className="space-y-2.5">
-      {/* Date filters */}
-      <div className="flex gap-2 flex-wrap">
-        {dateFilters.map((f) => (
-          <FilterChip
-            key={f.value}
-            label={f.label}
-            active={activeDate === f.value}
-            onClick={() => setParam('filter', f.value)}
-          />
-        ))}
+    <div className="bg-gray-50 rounded-2xl p-3 space-y-2.5">
+      {/* Date row */}
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 w-8 flex-shrink-0">Date</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {dateFilters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setParam('filter', f.value)}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                activeDate === f.value
+                  ? 'bg-[#1B4332] text-white'
+                  : 'bg-white text-gray-500 hover:text-gray-800 border border-gray-200'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Type filters */}
-      <div className="flex gap-2 flex-wrap">
-        {typeFilters.map((f) => (
-          <FilterChip
-            key={f.value}
-            label={f.label}
-            active={activeType === f.value}
-            onClick={() => setParam('type', f.value)}
-          />
-        ))}
+      {/* Divider */}
+      <div className="border-t border-gray-200 mx-1" />
+
+      {/* Type row */}
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 w-8 flex-shrink-0">Type</span>
+        <div className="flex gap-1.5 flex-wrap">
+          {typeFilters.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => setParam('type', f.value)}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+                activeType === f.value
+                  ? 'bg-[#1B4332] text-white'
+                  : 'bg-white text-gray-500 hover:text-gray-800 border border-gray-200'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   )
