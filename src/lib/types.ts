@@ -46,6 +46,7 @@ export interface SiteRecord {
   site_address: string
   machine_code: string
   rows: SiteRecordRow[]
+  materials?: string[]
   works_agreed_by: string
   capacity: string
   signed_in_presence_of: string

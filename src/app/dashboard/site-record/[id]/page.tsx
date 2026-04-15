@@ -124,6 +124,23 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
         </div>
       )}
 
+      {/* Materials */}
+      {siteRecord.materials && siteRecord.materials.length > 0 && (
+        <div className="card">
+          <h3 className="font-bold text-gray-900 mb-3">Materials</h3>
+          <div className="flex flex-wrap gap-2">
+            {siteRecord.materials.map((code) => (
+              <span
+                key={code}
+                className="bg-[#1B4332] text-white text-sm font-semibold px-3 py-1.5 rounded-lg"
+              >
+                {code}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Sign-off */}
       <div className="card">
         <h3 className="font-bold text-gray-900 mb-4">Sign-off</h3>

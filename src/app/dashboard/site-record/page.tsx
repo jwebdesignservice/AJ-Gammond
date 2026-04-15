@@ -50,8 +50,14 @@ export default function SiteRecordPage() {
   const [capacity,       setCapacity]       = useState('')
   const [signedPresence, setSignedPresence] = useState('')
   const [ajgRepSig,      setAjgRepSig]      = useState('')
+  const [materials,      setMaterials]      = useState<string[]>([])
   const [loading,        setLoading]        = useState(false)
   const [error,          setError]          = useState('')
+
+  const toggleMaterial = (code: string) =>
+    setMaterials(prev =>
+      prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]
+    )
 
   const updateRow = (i: number, field: keyof SiteRecordRow, value: string) =>
     setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: value } : r))
@@ -77,7 +83,7 @@ export default function SiteRecordPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      const { error: insertError } = await supabase
+      const { data: inserted, error: insertError } = await supabase
         .from('site_records')
         .insert({
           user_id:               user.id,
@@ -87,13 +93,40 @@ export default function SiteRecordPage() {
           site_address:          siteAddress,
           machine_code:          machineCode,
           rows,
+          materials,
           works_agreed_by:       worksAgreedBy,
           capacity,
           signed_in_presence_of: signedPresence,
           ajg_rep_signature:     ajgRepSig,
         })
+        .select('id')
+        .single()
 
       if (insertError) throw insertError
+
+      // Send email notification (non-blocking)
+      try {
+        await fetch('/api/send-site-record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            submissionId: inserted?.id,
+            customer,
+            machineType,
+            siteAddress,
+            machineCode,
+            rows,
+            materials,
+            worksAgreedBy,
+            capacity,
+            signedPresence,
+            ajgRepSig,
+            submittedAt: new Date().toLocaleString('en-GB'),
+          }),
+        })
+      } catch {
+        // Email failure doesn't block submission
+      }
 
       window.location.href = '/dashboard'
     } catch (err: unknown) {
@@ -343,17 +376,39 @@ export default function SiteRecordPage() {
           </button>
         </div>
 
-        {/* ── Materials Reference ── */}
+        {/* ── Materials ── */}
         <div className="card">
-          <h3 className="font-bold text-gray-900 mb-3">Materials Code Reference</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {MATERIALS.map(m => (
-              <div key={m.code} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
-                <span className="font-bold text-[#1B4332] text-sm w-12 flex-shrink-0">{m.code}</span>
-                <span className="text-gray-600 text-sm">{m.label}</span>
-              </div>
-            ))}
+          <div className="mb-3">
+            <h3 className="font-bold text-gray-900">Materials</h3>
+            <p className="text-gray-500 text-xs mt-0.5">Tick all materials encountered on this job</p>
           </div>
+          <div className="grid grid-cols-2 gap-2">
+            {MATERIALS.map(m => {
+              const ticked = materials.includes(m.code)
+              return (
+                <button
+                  key={m.code}
+                  type="button"
+                  onClick={() => toggleMaterial(m.code)}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left transition-colors border ${
+                    ticked
+                      ? 'bg-[#1B4332] border-[#1B4332] text-white'
+                      : 'bg-gray-50 border-gray-100 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className={`font-bold text-sm w-12 flex-shrink-0 ${ticked ? 'text-white' : 'text-[#1B4332]'}`}>
+                    {m.code}
+                  </span>
+                  <span className="text-sm">{m.label}</span>
+                </button>
+              )
+            })}
+          </div>
+          {materials.length > 0 && (
+            <p className="text-xs text-[#1B4332] font-semibold mt-2.5">
+              {materials.length} material{materials.length !== 1 ? 's' : ''} selected: {materials.join(', ')}
+            </p>
+          )}
         </div>
 
         {/* ── Sign-Off ── */}

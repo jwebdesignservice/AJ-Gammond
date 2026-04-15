@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { CheckItem } from '@/lib/types'
+import { buildActionUrl } from '@/app/api/action/route'
 
 // Build a plain-text summary of checklist items
 function buildChecklistSummary(items: CheckItem[]): string {
@@ -36,7 +37,7 @@ function buildChecklistHtml(items: CheckItem[]): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, contractor, siteAddress, machineType, machineCode, siteItems, machineItems, comment, submittedAt } = body
+    const { submissionId, name, contractor, siteAddress, machineType, machineCode, siteItems, machineItems, comment, submittedAt } = body
 
     const host = process.env.EMAIL_HOST
     const port = Number(process.env.EMAIL_PORT ?? 587)
@@ -56,6 +57,10 @@ export async function POST(req: NextRequest) {
       secure: port === 465,
       auth: { user, pass },
     })
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `https://${req.headers.get('host')}`
+    const approveUrl = submissionId ? buildActionUrl(baseUrl, submissionId, 'approve', 'checklist') : null
+    const rejectUrl  = submissionId ? buildActionUrl(baseUrl, submissionId, 'reject',  'checklist') : null
 
     const subject = `AJ Gammond | Daily Safety & Maintenance Checklist — ${name} (${submittedAt})`
 
@@ -117,7 +122,16 @@ export async function POST(req: NextRequest) {
   }
 </div>`
 
-    await transporter.sendMail({ from, to, subject, text, html })
+    const actionButtonsHtml = (approveUrl && rejectUrl) ? `
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:20px;margin-bottom:16px;text-align:center;">
+    <p style="color:#374151;font-size:14px;margin-top:0;margin-bottom:16px;font-weight:600;">Review this submission</p>
+    <a href="${approveUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;margin-right:12px;">✅ Approve</a>
+    <a href="${rejectUrl}"  style="display:inline-block;background:#dc2626;color:#fff;padding:12px 28px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;">❌ Reject</a>
+  </div>` : ''
+
+    const fullHtml = actionButtonsHtml + html
+
+    await transporter.sendMail({ from, to, subject, text, html: fullHtml })
 
     return NextResponse.json({ ok: true })
   } catch (err) {

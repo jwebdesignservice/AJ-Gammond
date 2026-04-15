@@ -124,6 +124,7 @@ create table if not exists public.site_records (
   site_address          text not null,
   machine_code          text not null,
   rows                  jsonb not null default '[]',
+  materials             text[] default '{}',
   works_agreed_by       text not null,
   capacity              text,
   signed_in_presence_of text,
