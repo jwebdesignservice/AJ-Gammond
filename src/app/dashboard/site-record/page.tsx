@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { SiteRecordRow } from '@/lib/types'
-import { Loader2, Plus, Trash2, Info } from 'lucide-react'
+import { Loader2, Plus, Trash2, Info, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 const MATERIALS = [
   { code: 'A',     label: 'Asphalt' },
@@ -27,6 +28,14 @@ const emptyRow = (): SiteRecordRow => ({
   hrs: '',
   picks: '',
 })
+
+function FieldLabel({ children, required }: { children: React.ReactNode; required?: boolean }) {
+  return (
+    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+      {children}{required && <span className="text-red-500 ml-0.5">*</span>}
+    </label>
+  )
+}
 
 export default function SiteRecordPage() {
   const router = useRouter()
@@ -55,7 +64,7 @@ export default function SiteRecordPage() {
     setError('')
 
     if (!customer.trim() || !machineType.trim() || !siteAddress.trim() || !machineCode.trim()) {
-      setError('Please complete all header fields — Customer, Machine Type, Site Address and Machine Code are required.')
+      setError('Please complete all required fields — Customer, Machine Type, Site Address and Machine Code.')
       return
     }
     if (!worksAgreedBy.trim()) {
@@ -94,88 +103,85 @@ export default function SiteRecordPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto pb-10">
-      {/* Page header */}
-      <div className="pt-2 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Site Record Sheet</h1>
-        <p className="text-gray-500 text-sm mt-1">
-          Complete all sections below and submit when work is finished
-        </p>
-      </div>
+    <div className="max-w-2xl mx-auto pb-10">
 
-      {/* Instructions */}
-      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
-        <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-blue-800">
-          <p className="font-semibold mb-1">How to complete this form</p>
-          <p>Fill in the header details, add one row per section of work, then sign off at the bottom and press <strong>Submit</strong>.</p>
+      {/* Page header */}
+      <div className="flex items-center gap-3 pt-2 mb-6">
+        <Link
+          href="/dashboard"
+          className="w-9 h-9 bg-white rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0"
+        >
+          <ArrowLeft className="w-4 h-4 text-gray-600" />
+        </Link>
+        <div>
+          <h1 className="text-xl font-bold text-gray-900">Site Record Sheet</h1>
+          <p className="text-gray-500 text-sm mt-0.5">Complete all sections and submit when done</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Instructions */}
+      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-5">
+        <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-blue-800">
+          Fill in the job details, add one entry per section of work, then sign off at the bottom.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
           <div className="bg-red-50 text-red-700 p-4 rounded-2xl text-sm border border-red-100">
             {error}
           </div>
         )}
 
-        {/* ── Header details ── */}
+        {/* ── Job Details ── */}
         <div className="card space-y-4">
+          <h3 className="font-bold text-gray-900">Job Details</h3>
+
           <div>
-            <h3 className="font-bold text-gray-900 mb-1">Job Details</h3>
-            <p className="text-gray-500 text-sm">Fill in site and machine information</p>
+            <FieldLabel required>Customer</FieldLabel>
+            <input
+              type="text"
+              value={customer}
+              onChange={e => setCustomer(e.target.value)}
+              className="input"
+              placeholder="Customer name"
+            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <FieldLabel required>Site Address</FieldLabel>
+            <input
+              type="text"
+              value={siteAddress}
+              onChange={e => setSiteAddress(e.target.value)}
+              className="input"
+              placeholder="Full site address"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Customer <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={customer}
-                onChange={e => setCustomer(e.target.value)}
-                className="input"
-                placeholder="Customer name"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Machine Type <span className="text-red-500">*</span>
-              </label>
+              <FieldLabel required>Machine Type</FieldLabel>
               <select
                 value={machineType}
                 onChange={e => setMachineType(e.target.value)}
                 className="input"
               >
-                <option value="">Select machine type…</option>
+                <option value="">Select…</option>
                 {(['Trencher', 'Rocksaw', 'Rock Hawg'] as const).map(t => (
                   <option key={t} value={t}>{t}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Site Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={siteAddress}
-                onChange={e => setSiteAddress(e.target.value)}
-                className="input"
-                placeholder="Full site address"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Machine Code <span className="text-red-500">*</span>
-              </label>
+              <FieldLabel required>Machine Code</FieldLabel>
               <select
                 value={machineCode}
                 onChange={e => setMachineCode(e.target.value)}
                 className="input"
               >
-                <option value="">Select machine code…</option>
+                <option value="">Select…</option>
                 {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as const).map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -184,12 +190,12 @@ export default function SiteRecordPage() {
           </div>
         </div>
 
-        {/* ── Work record table ── */}
+        {/* ── Work Entries ── */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-gray-900 mb-1">Work Record</h3>
-              <p className="text-gray-500 text-sm">Add one row per section of work carried out</p>
+              <h3 className="font-bold text-gray-900">Work Entries</h3>
+              <p className="text-gray-500 text-xs mt-0.5">One entry per section of work</p>
             </div>
             <button
               type="button"
@@ -197,213 +203,214 @@ export default function SiteRecordPage() {
               className="btn-secondary btn-sm flex items-center gap-1.5 flex-shrink-0"
             >
               <Plus className="w-4 h-4" />
-              Add Row
+              Add
             </button>
           </div>
 
-          {/* Scrollable table */}
-          <div className="overflow-x-auto -mx-5 px-5">
-            <table className="w-full min-w-[720px] text-sm border-collapse">
-              <thead>
-                <tr className="bg-[#1B4332] text-white">
-                  <th className="px-3 py-2.5 text-left font-semibold rounded-tl-lg w-[100px]">Date</th>
-                  <th className="px-3 py-2.5 text-left font-semibold">Description of Works</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[80px]">Width<br />(MM)</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[80px]">Depth<br />(MM)</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[80px]">Length<br />(LM)</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[90px]">Day /<br />Night</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[65px]">HRS</th>
-                  <th className="px-3 py-2.5 text-center font-semibold w-[70px]">Picks<br />Used</th>
-                  <th className="px-3 py-2.5 rounded-tr-lg w-[40px]" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, i) => (
-                  <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="date"
-                        value={row.date}
-                        onChange={e => updateRow(i, 'date', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="text"
-                        value={row.description}
-                        onChange={e => updateRow(i, 'description', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="e.g. Trenching along road verge"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="number"
-                        value={row.width}
-                        onChange={e => updateRow(i, 'width', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="—"
-                        min="0"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="number"
-                        value={row.depth}
-                        onChange={e => updateRow(i, 'depth', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="—"
-                        min="0"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="number"
-                        value={row.length}
-                        onChange={e => updateRow(i, 'length', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="—"
-                        min="0"
-                        step="0.1"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <select
-                        value={row.shift}
-                        onChange={e => updateRow(i, 'shift', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                      >
-                        <option value="">—</option>
-                        <option value="Day">Day</option>
-                        <option value="Night">Night</option>
-                      </select>
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="number"
-                        value={row.hrs}
-                        onChange={e => updateRow(i, 'hrs', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="—"
-                        min="0"
-                        step="0.5"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5">
-                      <input
-                        type="number"
-                        value={row.picks}
-                        onChange={e => updateRow(i, 'picks', e.target.value)}
-                        className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent"
-                        placeholder="—"
-                        min="0"
-                      />
-                    </td>
-                    <td className="px-2 py-1.5 text-center">
-                      {rows.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeRow(i)}
-                          className="text-gray-300 hover:text-red-500 transition-colors"
-                          aria-label="Remove row"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-3">
+            {rows.map((row, i) => (
+              <div
+                key={i}
+                className="border border-gray-100 rounded-2xl p-4 bg-gray-50 space-y-3"
+              >
+                {/* Row header */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                    Entry {i + 1}
+                  </span>
+                  {rows.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeRow(i)}
+                      className="text-gray-300 hover:text-red-500 transition-colors p-1 -mr-1"
+                      aria-label="Remove entry"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Date */}
+                <div>
+                  <FieldLabel>Date</FieldLabel>
+                  <input
+                    type="date"
+                    value={row.date}
+                    onChange={e => updateRow(i, 'date', e.target.value)}
+                    className="input"
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <FieldLabel>Description of Works</FieldLabel>
+                  <input
+                    type="text"
+                    value={row.description}
+                    onChange={e => updateRow(i, 'description', e.target.value)}
+                    className="input"
+                    placeholder="e.g. Trenching along road verge"
+                  />
+                </div>
+
+                {/* Measurements — 3 columns */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <FieldLabel>Width (MM)</FieldLabel>
+                    <input
+                      type="number"
+                      value={row.width}
+                      onChange={e => updateRow(i, 'width', e.target.value)}
+                      className="input text-center px-2"
+                      placeholder="0"
+                      min="0"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Depth (MM)</FieldLabel>
+                    <input
+                      type="number"
+                      value={row.depth}
+                      onChange={e => updateRow(i, 'depth', e.target.value)}
+                      className="input text-center px-2"
+                      placeholder="0"
+                      min="0"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Length (LM)</FieldLabel>
+                    <input
+                      type="number"
+                      value={row.length}
+                      onChange={e => updateRow(i, 'length', e.target.value)}
+                      className="input text-center px-2"
+                      placeholder="0"
+                      min="0"
+                      step="0.1"
+                    />
+                  </div>
+                </div>
+
+                {/* Shift / HRS / Picks — 3 columns */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <FieldLabel>Shift</FieldLabel>
+                    <select
+                      value={row.shift}
+                      onChange={e => updateRow(i, 'shift', e.target.value)}
+                      className="input px-2"
+                    >
+                      <option value="">—</option>
+                      <option value="Day">Day</option>
+                      <option value="Night">Night</option>
+                    </select>
+                  </div>
+                  <div>
+                    <FieldLabel>HRS</FieldLabel>
+                    <input
+                      type="number"
+                      value={row.hrs}
+                      onChange={e => updateRow(i, 'hrs', e.target.value)}
+                      className="input text-center px-2"
+                      placeholder="0"
+                      min="0"
+                      step="0.5"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Picks Used</FieldLabel>
+                    <input
+                      type="number"
+                      value={row.picks}
+                      onChange={e => updateRow(i, 'picks', e.target.value)}
+                      className="input text-center px-2"
+                      placeholder="0"
+                      min="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
           <button
             type="button"
             onClick={addRow}
-            className="mt-4 w-full border-2 border-dashed border-gray-200 rounded-xl py-2.5 text-sm font-medium text-gray-400 hover:border-[#1B4332] hover:text-[#1B4332] transition-colors flex items-center justify-center gap-1.5"
+            className="mt-3 w-full border-2 border-dashed border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-400 hover:border-[#1B4332] hover:text-[#1B4332] transition-colors flex items-center justify-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            Add another row
+            Add another entry
           </button>
         </div>
 
-        {/* ── Materials code reference ── */}
+        {/* ── Materials Reference ── */}
         <div className="card">
           <h3 className="font-bold text-gray-900 mb-3">Materials Code Reference</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {MATERIALS.map(m => (
-              <div key={m.code} className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
-                <span className="font-bold text-[#1B4332] text-sm min-w-[40px]">{m.code}</span>
+              <div key={m.code} className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
+                <span className="font-bold text-[#1B4332] text-sm w-12 flex-shrink-0">{m.code}</span>
                 <span className="text-gray-600 text-sm">{m.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ── Sign-off ── */}
+        {/* ── Sign-Off ── */}
         <div className="card space-y-4">
           <div>
-            <h3 className="font-bold text-gray-900 mb-1">Sign-Off</h3>
-            <p className="text-gray-500 text-sm">All parties must sign to confirm the above information is correct</p>
+            <h3 className="font-bold text-gray-900">Sign-Off</h3>
+            <p className="text-gray-500 text-sm mt-0.5">Confirm the information above is correct</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Works Agreed By <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={worksAgreedBy}
-                onChange={e => setWorksAgreedBy(e.target.value)}
-                className="input font-serif italic"
-                placeholder="Type name to sign"
-              />
-              <p className="text-xs text-gray-400 mt-1">Client representative</p>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                In the Capacity of
-              </label>
-              <input
-                type="text"
-                value={capacity}
-                onChange={e => setCapacity(e.target.value)}
-                className="input"
-                placeholder="e.g. Site Manager"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Signed in the Presence of AJG Representative
-              </label>
-              <input
-                type="text"
-                value={signedPresence}
-                onChange={e => setSignedPresence(e.target.value)}
-                className="input font-serif italic"
-                placeholder="Type name to sign"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Signed by AJG Representative
-              </label>
-              <input
-                type="text"
-                value={ajgRepSig}
-                onChange={e => setAjgRepSig(e.target.value)}
-                className="input font-serif italic"
-                placeholder="Type name to sign"
-              />
-            </div>
+          <div>
+            <FieldLabel required>Works Agreed By</FieldLabel>
+            <input
+              type="text"
+              value={worksAgreedBy}
+              onChange={e => setWorksAgreedBy(e.target.value)}
+              className="input font-serif italic"
+              placeholder="Type name to sign"
+            />
+            <p className="text-xs text-gray-400 mt-1">Client representative</p>
           </div>
 
-          <p className="text-xs text-gray-400 border-t border-gray-100 pt-3">
-            By submitting this Site Record / Measure sheet you agree that all the above information is correct and
-            subsequently a Invoice / Application for payment will be produced and presented for payment as per
-            A J Gammond Ltd Terms &amp; Conditions.
+          <div>
+            <FieldLabel>In the Capacity of</FieldLabel>
+            <input
+              type="text"
+              value={capacity}
+              onChange={e => setCapacity(e.target.value)}
+              className="input"
+              placeholder="e.g. Site Manager"
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Signed in Presence of AJG Representative</FieldLabel>
+            <input
+              type="text"
+              value={signedPresence}
+              onChange={e => setSignedPresence(e.target.value)}
+              className="input font-serif italic"
+              placeholder="Type name to sign"
+            />
+          </div>
+
+          <div>
+            <FieldLabel>Signed by AJG Representative</FieldLabel>
+            <input
+              type="text"
+              value={ajgRepSig}
+              onChange={e => setAjgRepSig(e.target.value)}
+              className="input font-serif italic"
+              placeholder="Type name to sign"
+            />
+          </div>
+
+          <p className="text-xs text-gray-400 border-t border-gray-100 pt-3 leading-relaxed">
+            By submitting this Site Record / Measure sheet you confirm that all the above information is correct.
+            An invoice or application for payment will be produced and presented as per A J Gammond Ltd Terms &amp; Conditions.
           </p>
         </div>
 
@@ -411,14 +418,14 @@ export default function SiteRecordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full flex items-center justify-center text-lg py-4"
+          className="btn-primary w-full flex items-center justify-center text-base py-4"
         >
           {loading
             ? <><Loader2 className="w-5 h-5 animate-spin mr-2" />Submitting…</>
             : 'Submit Site Record'}
         </button>
 
-        <p className="text-center text-xs text-gray-400">
+        <p className="text-center text-xs text-gray-400 pb-4">
           Your submission will be reviewed by an administrator
         </p>
       </form>
