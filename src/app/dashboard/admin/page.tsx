@@ -67,7 +67,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   // Unify into a single list
   const items: UnifiedItem[] = []
 
-  type PartialRow = { id: string; name?: string; customer?: string; status: SubmissionStatus; created_at: string; profiles: { email: string; name: string }[] }
+  type PartialRow = { id: string; name?: string; customer?: string; status: SubmissionStatus; created_at: string; profiles: { email: string; name: string } | null }
 
   if (params.type !== 'site_record') {
     ;((submissions || []) as PartialRow[]).forEach((s) => {
@@ -75,8 +75,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
         id: s.id,
         type: 'checklist',
         name: s.name || 'Untitled',
-        email: s.profiles?.[0]?.email || '',
-        userName: s.profiles?.[0]?.name || '',
+        email: s.profiles?.email || '',
+        userName: s.profiles?.name || '',
         status: s.status,
         created_at: s.created_at,
       })
@@ -89,8 +89,8 @@ export default async function AdminPage({ searchParams }: PageProps) {
         id: r.id,
         type: 'site_record',
         name: r.customer || 'Untitled',
-        email: r.profiles?.[0]?.email || '',
-        userName: r.profiles?.[0]?.name || '',
+        email: r.profiles?.email || '',
+        userName: r.profiles?.name || '',
         status: r.status,
         created_at: r.created_at,
       })

@@ -21,30 +21,78 @@ export default function DownloadPdfButton({ contentId, filename }: DownloadPdfBu
       const html2canvas = (await import('html2canvas-pro')).default
       const { jsPDF } = await import('jspdf')
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-      })
-
-      const imgData = canvas.toDataURL('image/png')
-      const imgWidth = 210 // A4 width in mm
-      const pageHeight = 297 // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-
       const pdf = new jsPDF('p', 'mm', 'a4')
-      let heightLeft = imgHeight
-      let position = 0
+      const pageWidth = 210
+      const pageHeight = 297
+      const margin = 10
+      const usableWidth = pageWidth - margin * 2
+      const usableHeight = pageHeight - margin * 2
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
+      let currentY = margin
 
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-        heightLeft -= pageHeight
+      // Get all direct children as sections to render individually
+      const sections = Array.from(element.children) as HTMLElement[]
+
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i]
+
+        const canvas = await html2canvas(section, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+        })
+
+        const imgData = canvas.toDataURL('image/png')
+        const imgHeight = (canvas.height * usableWidth) / canvas.width
+
+        // If section doesn't fit on current page and we're not at the top, start a new page
+        if (currentY + imgHeight > pageHeight - margin && currentY > margin) {
+          pdf.addPage()
+          currentY = margin
+        }
+
+        // If a single section is taller than a full page, it needs to be split across pages
+        if (imgHeight > usableHeight) {
+          let srcY = 0
+          const totalSrcHeight = canvas.height
+          const srcPageHeight = (usableHeight / imgHeight) * totalSrcHeight
+
+          while (srcY < totalSrcHeight) {
+            if (srcY > 0) {
+              pdf.addPage()
+              currentY = margin
+            }
+
+            const remainingSrc = totalSrcHeight - srcY
+            const sliceHeight = Math.min(srcPageHeight, remainingSrc)
+            const sliceCanvas = document.createElement('canvas')
+            sliceCanvas.width = canvas.width
+            sliceCanvas.height = sliceHeight
+
+            const ctx = sliceCanvas.getContext('2d')
+            if (ctx) {
+              ctx.fillStyle = '#ffffff'
+              ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height)
+              ctx.drawImage(
+                canvas,
+                0, srcY, canvas.width, sliceHeight,
+                0, 0, canvas.width, sliceHeight,
+              )
+            }
+
+            const sliceImgData = sliceCanvas.toDataURL('image/png')
+            const sliceImgHeight = (sliceHeight * usableWidth) / canvas.width
+
+            pdf.addImage(sliceImgData, 'PNG', margin, currentY, usableWidth, sliceImgHeight)
+            currentY += sliceImgHeight
+
+            srcY += sliceHeight
+          }
+        } else {
+          pdf.addImage(imgData, 'PNG', margin, currentY, usableWidth, imgHeight)
+          currentY += imgHeight
+        }
       }
 
       const safeName = filename.replace(/[^a-zA-Z0-9-_]/g, '_')

@@ -6,7 +6,7 @@ import { Check, X } from 'lucide-react'
 interface ChecklistGridProps {
   title: string
   items: CheckItem[]
-  onUpdate: (itemId: string, value: CheckValue) => void
+  onUpdate?: (itemId: string, value: CheckValue) => void
   readOnly?: boolean
   showValidation?: boolean
 }
@@ -66,7 +66,7 @@ export default function ChecklistGrid({ title, items, onUpdate, readOnly = false
 
               <button
                 type="button"
-                onClick={() => !readOnly && onUpdate(item.id, cycleValue(currentValue))}
+                onClick={() => !readOnly && onUpdate?.(item.id, cycleValue(currentValue))}
                 disabled={readOnly}
                 aria-label={`${item.label}: ${currentValue ?? 'not checked'}`}
                 className={`w-20 h-10 rounded-[4px] flex items-center justify-center gap-1.5 text-sm font-medium transition-all touch-manipulation flex-shrink-0 ${
