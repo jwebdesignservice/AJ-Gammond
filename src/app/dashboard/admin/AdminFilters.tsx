@@ -51,7 +51,8 @@ export default function AdminFilters() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Name or email..."
-              className="input !pl-9"
+              className="input"
+              style={{ paddingLeft: '2.25rem' }}
             />
           </div>
         </div>
