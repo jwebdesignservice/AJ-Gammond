@@ -109,7 +109,7 @@ export default function DownloadPdfButton({ contentId, filename, fullWidth = fal
     <button
       onClick={handleDownload}
       disabled={loading}
-      className={`flex items-center justify-center gap-2 text-sm font-medium disabled:opacity-50 bg-[#2563EB] hover:bg-[#1d4ed8] text-white px-4 py-2.5 rounded-[3px] transition-colors ${fullWidth ? 'w-full' : ''}`}
+      className={`flex items-center justify-center gap-2 text-base font-semibold disabled:opacity-50 bg-[#2563EB] hover:bg-[#1d4ed8] text-white px-5 py-3 rounded-[3px] transition-colors shadow-sm ${fullWidth ? 'w-full' : ''}`}
       title="Download as PDF"
     >
       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
