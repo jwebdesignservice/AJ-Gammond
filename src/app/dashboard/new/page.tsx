@@ -182,8 +182,7 @@ export default function NewChecklistPage() {
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
         <div>
-        <p className="text-xs font-bold text-[#1B4332] uppercase tracking-wide">AJ Gammond Ltd</p>
-        <h1 className="text-2xl font-bold text-gray-900">Daily Safety Checklist</h1>
+        <h1 className="text-2xl font-bold text-gray-900"><span className="text-[#1B4332]">AJ Gammond Ltd</span> Daily Safety Checklist</h1>
         <p className="text-gray-500 text-sm mt-1">
           Complete all sections below before starting work today
         </p>

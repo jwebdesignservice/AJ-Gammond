@@ -49,8 +49,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold text-[#1B4332] uppercase tracking-wider mb-0.5">AJ Gammond Ltd</p>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">Site Record Sheet</p>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">AJ Gammond Ltd — Site Record Sheet</p>
           <h1 className="text-lg font-bold text-gray-900 leading-tight">{submittedDate}</h1>
           <p className="text-sm text-gray-500">Submitted at {submittedTime}</p>
         </div>

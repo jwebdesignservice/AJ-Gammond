@@ -51,7 +51,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold text-[#1B4332] uppercase tracking-wider">AJ Gammond Ltd</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">AJ Gammond Ltd — Site Record Sheet</p>
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Review Site Record</h1>
               <StatusBadge status={siteRecord.status} />
@@ -67,8 +67,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
       <div id="pdf-content" className="bg-white p-4 sm:p-6 border border-gray-200 rounded-[3px]">
         {/* PDF Header */}
         <div className="border-b-2 border-[#1B4332] pb-4 mb-6">
-          <p className="text-xs font-bold text-[#1B4332] uppercase tracking-wider mb-1">AJ Gammond Ltd</p>
-          <h2 className="text-xl font-bold text-[#1B4332] uppercase tracking-wide">Site Record Report</h2>
+          <h2 className="text-xl font-bold text-[#1B4332] uppercase tracking-wide">AJ Gammond Ltd — Site Record Report</h2>
           <p className="text-sm text-gray-500 mt-1">Reference: {id.slice(0, 8).toUpperCase()}</p>
         </div>
 
@@ -261,6 +260,13 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="bg-gray-50 border border-gray-200 rounded-[3px] p-3 mb-4">
+          <p className="text-xs text-gray-500 leading-relaxed">
+            By submitting this Site Record / Measure sheet you confirm that all the above information is correct. An invoice or application for payment will be produced and presented as per A J Gammond Ltd Terms &amp; Conditions.
+          </p>
         </div>
 
         {/* Footer */}
