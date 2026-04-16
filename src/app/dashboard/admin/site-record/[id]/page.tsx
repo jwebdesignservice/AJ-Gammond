@@ -52,17 +52,19 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
+        <div className="flex items-start gap-3">
+          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900 mt-1">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">Review Site Record</h1>
-            <p className="text-sm text-gray-600">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Review Site Record</h1>
+              <StatusBadge status={siteRecord.status} />
+            </div>
+            <p className="text-sm text-gray-600 mt-0.5">
               {submittedDate} at {submittedTime}
             </p>
           </div>
-          <StatusBadge status={siteRecord.status} />
         </div>
         <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth />
       </div>
@@ -86,7 +88,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             </div>
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</p>
-              <p className="text-gray-900 mt-0.5">{siteRecord.profiles?.email || '—'}</p>
+              <p className="text-gray-900 mt-0.5 break-all">{siteRecord.profiles?.email || '—'}</p>
             </div>
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date Submitted</p>
@@ -96,8 +98,6 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Time</p>
               <p className="text-gray-900 mt-0.5">{submittedTime}</p>
             </div>
-            <div className="px-4 py-3" />
-            <div className="px-4 py-3" />
           </div>
         </div>
 
@@ -138,36 +138,79 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <h3 className="text-sm font-bold text-white uppercase tracking-wide">Section 2 — Work Records</h3>
           </div>
           {siteRecord.rows && siteRecord.rows.length > 0 ? (
-            <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
-              <thead>
-                <tr className="bg-gray-100 border-b border-gray-200">
-                  <th className="text-left text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Date</th>
-                  <th className="text-left text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Description</th>
-                  <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Width</th>
-                  <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Depth</th>
-                  <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Length</th>
-                  <th className="text-center text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Shift</th>
-                  <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Hours</th>
-                  <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Picks</th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              {/* Desktop table */}
+              <div className="hidden sm:block">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-100 border-b border-gray-200">
+                      <th className="text-left text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Date</th>
+                      <th className="text-left text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Description</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Width</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Depth</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Length</th>
+                      <th className="text-center text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Shift</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Hours</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Picks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {siteRecord.rows.map((row: SiteRecordRow, i: number) => (
+                      <tr key={i} className={`border-b border-gray-200 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <td className="px-4 py-2.5 text-gray-700 whitespace-nowrap font-medium">{row.date || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700">{row.description || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-right">{row.width || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-right">{row.depth || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-right">{row.length || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-center">{row.shift || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-right">{row.hrs || '—'}</td>
+                        <td className="px-4 py-2.5 text-gray-700 text-right">{row.picks || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* Mobile stacked cards */}
+              <div className="sm:hidden divide-y divide-gray-200">
                 {siteRecord.rows.map((row: SiteRecordRow, i: number) => (
-                  <tr key={i} className={`border-b border-gray-200 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                    <td className="px-4 py-2.5 text-gray-700 whitespace-nowrap font-medium">{row.date || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700">{row.description || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700 text-right">{row.width || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700 text-right">{row.depth || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700 text-right">{row.length || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700 text-center">{row.shift || '—'}</td>
-                    <td className="px-3 py-2.5 text-gray-700 text-right">{row.hrs || '—'}</td>
-                    <td className="px-4 py-2.5 text-gray-700 text-right">{row.picks || '—'}</td>
-                  </tr>
+                  <div key={i} className="px-4 py-3 space-y-2">
+                    <div className="flex justify-between">
+                      <p className="text-xs font-bold text-gray-500 uppercase">Entry {i + 1}</p>
+                      <p className="text-sm font-medium text-gray-900">{row.date || '—'}</p>
+                    </div>
+                    <p className="text-sm text-gray-700">{row.description || '—'}</p>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-500">Width</p>
+                        <p className="text-gray-900 font-medium">{row.width || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Depth</p>
+                        <p className="text-gray-900 font-medium">{row.depth || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Length</p>
+                        <p className="text-gray-900 font-medium">{row.length || '—'}</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-500">Shift</p>
+                        <p className="text-gray-900 font-medium">{row.shift || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Hours</p>
+                        <p className="text-gray-900 font-medium">{row.hrs || '—'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Picks</p>
+                        <p className="text-gray-900 font-medium">{row.picks || '—'}</p>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-            </div>
+              </div>
+            </>
           ) : (
             <div className="px-4 py-3">
               <p className="text-gray-400 italic">No work records entered</p>
@@ -205,12 +248,12 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           </div>
           <div className="px-4 py-3">
             <p className="text-sm text-gray-700 mb-4">I confirm that all information recorded above is accurate and complete to the best of my knowledge.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
-              <div className="pr-4 border-b border-gray-200 pb-3 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-200 pb-3 mb-3">
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Works Agreed By</p>
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.works_agreed_by || '—'}</p>
               </div>
-              <div className="pl-4 border-b border-gray-200 pb-3 mb-3">
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence Of</p>
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
               </div>

@@ -74,17 +74,19 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="space-y-3">
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
+        <div className="flex items-start gap-3">
+          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900 mt-1">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">Review Submission</h1>
-            <p className="text-sm text-gray-600">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Review Submission</h1>
+              <StatusBadge status={submission.status} />
+            </div>
+            <p className="text-sm text-gray-600 mt-0.5">
               {submittedDate} at {submittedTime}
             </p>
           </div>
-          <StatusBadge status={submission.status} />
         </div>
         <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} fullWidth />
       </div>
@@ -108,7 +110,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
             </div>
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</p>
-              <p className="text-gray-900 mt-0.5">{submission.profiles?.email || '—'}</p>
+              <p className="text-gray-900 mt-0.5 break-all">{submission.profiles?.email || '—'}</p>
             </div>
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date Submitted</p>
@@ -118,8 +120,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Time</p>
               <p className="text-gray-900 mt-0.5">{submittedTime}</p>
             </div>
-            <div className="px-4 py-3" />
-            <div className="px-4 py-3" />
           </div>
         </div>
 
@@ -260,12 +260,12 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </div>
           <div className="px-4 py-3">
             <p className="text-sm text-gray-700 mb-4">I confirm that all checks have been completed accurately and to the best of my knowledge.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
-              <div className="pr-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</p>
                 <p className="text-gray-900 font-medium mt-0.5">{submission.name}</p>
               </div>
-              <div className="pl-4">
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signature</p>
                 <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5">{submission.signature}</p>
               </div>
