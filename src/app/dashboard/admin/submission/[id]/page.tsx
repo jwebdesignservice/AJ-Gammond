@@ -71,7 +71,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </Link>
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900"><span className="text-[#1B4332]">AJ Gammond Ltd</span> Review Submission</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900"><span className="text-[#1B4332]">AJ Gammond Ltd</span> Daily Safety Checklist</h1>
               <StatusBadge status={submission.status} />
             </div>
             <p className="text-sm text-gray-600 mt-0.5">

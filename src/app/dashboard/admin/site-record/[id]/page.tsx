@@ -51,9 +51,8 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">AJ Gammond Ltd — Site Record Sheet</p>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Review Site Record</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900"><span className="text-[#1B4332]">AJ Gammond Ltd</span> Site Record Sheet</h1>
               <StatusBadge status={siteRecord.status} />
             </div>
             <p className="text-sm text-gray-600 mt-0.5">
