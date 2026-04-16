@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MessageSquare } from 'lucide-react'
+import { ArrowLeft, AlertCircle, MessageSquare } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
 import { SiteRecord, SiteRecordRow, SubmissionNote } from '@/lib/types'
 
@@ -55,6 +55,21 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
         </div>
         <StatusBadge status={siteRecord.status} />
       </div>
+
+      {/* Edit & Resubmit CTA */}
+      {(siteRecord.status === 'rejected' || siteRecord.status === 'needs_review') && (
+        <Link
+          href={`/dashboard/site-record/${id}/edit`}
+          className="flex items-center gap-3 w-full bg-red-50 hover:bg-red-100 border border-red-200 rounded-[3px] p-4 transition-colors group"
+        >
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-red-800">This submission needs changes</p>
+            <p className="text-xs text-red-600 mt-0.5">Edit &amp; Resubmit</p>
+          </div>
+          <ArrowLeft className="w-4 h-4 text-red-400 rotate-180 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+      )}
 
       {/* Job Details */}
       <div className="card">
