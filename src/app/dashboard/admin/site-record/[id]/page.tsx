@@ -51,21 +51,23 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">Review Site Record</h1>
-          <p className="text-sm text-gray-600">
-            {submittedDate} at {submittedTime}
-          </p>
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-gray-900">Review Site Record</h1>
+            <p className="text-sm text-gray-600">
+              {submittedDate} at {submittedTime}
+            </p>
+          </div>
+          <StatusBadge status={siteRecord.status} />
         </div>
-        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} />
-        <StatusBadge status={siteRecord.status} />
+        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth />
       </div>
 
-      <div id="pdf-content" className="bg-white p-6 border border-gray-200 rounded-[3px]">
+      <div id="pdf-content" className="bg-white p-4 sm:p-6 border border-gray-200 rounded-[3px]">
         {/* PDF Header */}
         <div className="border-b-2 border-[#1B4332] pb-4 mb-6">
           <h2 className="text-xl font-bold text-[#1B4332] uppercase tracking-wide">Site Record Report</h2>
@@ -77,7 +79,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
             <h3 className="text-sm font-bold text-[#1B4332] uppercase tracking-wide">Submission Details</h3>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Submitted By</p>
               <p className="text-gray-900 font-medium mt-0.5">{siteRecord.profiles?.name || siteRecord.customer}</p>
@@ -104,7 +106,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           <div className="bg-[#1B4332] px-4 py-2">
             <h3 className="text-sm font-bold text-white uppercase tracking-wide">Section 1 — Job Details</h3>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Customer</p>
               <p className="text-gray-900 font-medium mt-0.5">{siteRecord.customer || '—'}</p>
@@ -118,7 +120,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Site Address</p>
             <p className="text-gray-900 font-medium mt-0.5">{siteRecord.site_address || '—'}</p>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
             <div className="px-4 py-3">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Machine Code</p>
               <p className="text-gray-900 font-medium mt-0.5">{siteRecord.machine_code || '—'}</p>
@@ -136,7 +138,8 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <h3 className="text-sm font-bold text-white uppercase tracking-wide">Section 2 — Work Records</h3>
           </div>
           {siteRecord.rows && siteRecord.rows.length > 0 ? (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-200">
                   <th className="text-left text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Date</th>
@@ -164,6 +167,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 ))}
               </tbody>
             </table>
+            </div>
           ) : (
             <div className="px-4 py-3">
               <p className="text-gray-400 italic">No work records entered</p>
@@ -201,7 +205,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           </div>
           <div className="px-4 py-3">
             <p className="text-sm text-gray-700 mb-4">I confirm that all information recorded above is accurate and complete to the best of my knowledge.</p>
-            <div className="grid grid-cols-2 divide-x divide-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
               <div className="pr-4 border-b border-gray-200 pb-3 mb-3">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Works Agreed By</p>
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.works_agreed_by || '—'}</p>

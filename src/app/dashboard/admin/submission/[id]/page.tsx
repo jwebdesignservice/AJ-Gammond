@@ -73,21 +73,23 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-900">Review Submission</h1>
-          <p className="text-sm text-gray-600">
-            {submittedDate} at {submittedTime}
-          </p>
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard/admin" className="text-gray-600 hover:text-gray-900">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-gray-900">Review Submission</h1>
+            <p className="text-sm text-gray-600">
+              {submittedDate} at {submittedTime}
+            </p>
+          </div>
+          <StatusBadge status={submission.status} />
         </div>
-        <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} />
-        <StatusBadge status={submission.status} />
+        <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} fullWidth />
       </div>
 
-      <div id="pdf-content" className="bg-white p-6 border border-gray-200 rounded-[3px]">
+      <div id="pdf-content" className="bg-white p-4 sm:p-6 border border-gray-200 rounded-[3px]">
         {/* PDF Header */}
         <div className="border-b-2 border-[#1B4332] pb-4 mb-6">
           <h2 className="text-xl font-bold text-[#1B4332] uppercase tracking-wide">Daily Checklist Report</h2>
@@ -99,7 +101,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
             <h3 className="text-sm font-bold text-[#1B4332] uppercase tracking-wide">Submission Details</h3>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Submitted By</p>
               <p className="text-gray-900 font-medium mt-0.5">{submission.profiles?.name || submission.name}</p>
@@ -130,7 +132,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</p>
             <p className="text-gray-900 font-medium mt-0.5">{formData.date ? new Date(formData.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}</p>
           </div>
-          <div className="grid grid-cols-2 divide-x divide-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contractor</p>
               <p className="text-gray-900 font-medium mt-0.5">{formData.contractor || '—'}</p>
@@ -258,7 +260,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </div>
           <div className="px-4 py-3">
             <p className="text-sm text-gray-700 mb-4">I confirm that all checks have been completed accurately and to the best of my knowledge.</p>
-            <div className="grid grid-cols-2 divide-x divide-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
               <div className="pr-4">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</p>
                 <p className="text-gray-900 font-medium mt-0.5">{submission.name}</p>
