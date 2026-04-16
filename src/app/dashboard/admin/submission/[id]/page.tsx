@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MessageSquare, Image as ImageIcon } from 'lucide-react'
+import { ArrowLeft, Image as ImageIcon } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
-import { FormData, CheckItem, CheckValue, DayOfWeek, SubmissionNote } from '@/lib/types'
+import { FormData, CheckItem, CheckValue, DayOfWeek } from '@/lib/types'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
 
@@ -48,15 +48,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
   if (!submission) {
     notFound()
   }
-
-  const { data: notes } = await supabase
-    .from('submission_notes')
-    .select(`
-      *,
-      admin:admin_id (email)
-    `)
-    .eq('submission_id', id)
-    .order('created_at', { ascending: false })
 
   const formData = submission.form_data as FormData
 
@@ -287,30 +278,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
       </div>
 
       <AdminActions submissionId={id} currentStatus={submission.status} />
-
-      {notes && notes.length > 0 && (
-        <div className="card">
-          <h3 className="font-semibold text-lg text-gray-900 mb-4 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5" />
-            Notes History
-          </h3>
-          <div className="space-y-3">
-            {notes.map((note: SubmissionNote & { admin?: { email: string } }) => (
-              <div key={note.id} className="bg-gray-50 p-3 rounded-[3px]">
-                <p className="text-gray-700">{note.note}</p>
-                <p className="text-xs text-gray-500 mt-2">
-                  {note.admin?.email} • {new Date(note.created_at).toLocaleDateString('en-GB', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
