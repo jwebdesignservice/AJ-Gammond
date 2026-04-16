@@ -142,7 +142,7 @@ export default function SiteRecordPage() {
       <div className="flex items-center gap-3 pt-2 mb-6">
         <Link
           href="/dashboard"
-          className="w-9 h-9 bg-white rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0"
+          className="w-9 h-9 bg-white rounded-[3px] border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0"
         >
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
@@ -153,7 +153,7 @@ export default function SiteRecordPage() {
       </div>
 
       {/* Instructions */}
-      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-5">
+      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-[3px] p-4 mb-5">
         <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-blue-800">
           Fill in the job details, add one entry per section of work, then sign off at the bottom.
@@ -162,7 +162,7 @@ export default function SiteRecordPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-2xl text-sm border border-red-100">
+          <div className="bg-red-50 text-red-700 p-4 rounded-[3px] text-sm border border-red-100">
             {error}
           </div>
         )}
@@ -244,7 +244,7 @@ export default function SiteRecordPage() {
             {rows.map((row, i) => (
               <div
                 key={i}
-                className="border border-gray-100 rounded-2xl p-4 bg-gray-50 space-y-3"
+                className="border border-gray-100 rounded-[3px] p-4 bg-gray-50 space-y-3"
               >
                 {/* Row header */}
                 <div className="flex items-center justify-between">
@@ -369,7 +369,7 @@ export default function SiteRecordPage() {
           <button
             type="button"
             onClick={addRow}
-            className="mt-3 w-full border-2 border-dashed border-gray-200 rounded-xl py-3 text-sm font-medium text-gray-400 hover:border-[#1B4332] hover:text-[#1B4332] transition-colors flex items-center justify-center gap-1.5"
+            className="mt-3 w-full border-2 border-dashed border-gray-200 rounded-[3px] py-3 text-sm font-medium text-gray-400 hover:border-[#1B4332] hover:text-[#1B4332] transition-colors flex items-center justify-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
             Add another entry
@@ -390,7 +390,7 @@ export default function SiteRecordPage() {
                   key={m.code}
                   type="button"
                   onClick={() => toggleMaterial(m.code)}
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2.5 text-left transition-colors border ${
+                  className={`flex items-center gap-2 rounded-[3px] px-3 py-2.5 text-left transition-colors border ${
                     ticked
                       ? 'bg-[#1B4332] border-[#1B4332] text-white'
                       : 'bg-gray-50 border-gray-100 text-gray-700 hover:bg-gray-100'

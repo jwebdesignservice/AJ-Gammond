@@ -65,7 +65,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
         <StatusBadge status={siteRecord.status} />
       </div>
 
-      <div id="pdf-content" className="bg-white p-6 border border-gray-200 rounded-lg">
+      <div id="pdf-content" className="bg-white p-6 border border-gray-200 rounded-[3px]">
         {/* PDF Header */}
         <div className="border-b-2 border-[#1B4332] pb-4 mb-6">
           <h2 className="text-xl font-bold text-[#1B4332] uppercase tracking-wide">Site Record Report</h2>

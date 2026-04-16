@@ -179,7 +179,7 @@ export default function NewChecklistPage() {
       </div>
 
       {/* How to fill in instructions */}
-      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
+      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-[3px] p-4 mb-6">
         <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-blue-800">
           <p className="font-semibold mb-1">How to complete this form</p>
@@ -189,7 +189,7 @@ export default function NewChecklistPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-2xl text-sm border border-red-100">
+          <div className="bg-red-50 text-red-700 p-4 rounded-[3px] text-sm border border-red-100">
             {error}
           </div>
         )}
@@ -385,7 +385,7 @@ export default function NewChecklistPage() {
               {files.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100"
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-[3px] border border-gray-100"
                 >
                   <span className="text-sm text-gray-700 truncate">{file.name}</span>
                   <button

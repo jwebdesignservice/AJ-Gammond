@@ -43,7 +43,7 @@ export default function Navbar({ user }: NavbarProps) {
 
           {/* Brand */}
           <Link href="/dashboard" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="w-7 h-7 bg-white/15 rounded-lg flex items-center justify-center group-hover:bg-white/25 transition-colors">
+            <div className="w-7 h-7 bg-white/15 rounded-[3px] flex items-center justify-center group-hover:bg-white/25 transition-colors">
               <ClipboardCheck className="w-4 h-4 text-white" />
             </div>
             <span className="text-white font-bold text-sm tracking-wide hidden sm:block">AJ Gammond</span>
@@ -55,7 +55,7 @@ export default function Navbar({ user }: NavbarProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-1.5 text-[13px] font-medium rounded-md transition-colors ${
+                className={`px-3 py-1.5 text-[13px] font-medium rounded-[3px] transition-colors ${
                   isActive(link.href, link.exact)
                     ? 'bg-white/15 text-white'
                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -67,7 +67,7 @@ export default function Navbar({ user }: NavbarProps) {
             {user?.role === 'admin' && (
               <Link
                 href="/dashboard/admin"
-                className={`px-3 py-1.5 text-[13px] font-medium rounded-md transition-colors flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 text-[13px] font-medium rounded-[3px] transition-colors flex items-center gap-1.5 ${
                   isActive('/dashboard/admin')
                     ? 'bg-white/15 text-white'
                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -81,7 +81,7 @@ export default function Navbar({ user }: NavbarProps) {
 
           {/* User + sign out */}
           <div className="hidden md:flex items-center gap-2">
-            <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/10">
+            <div className="flex items-center gap-2 px-2.5 py-1 rounded-[3px] bg-white/10">
               <div className="w-5 h-5 rounded-full bg-green-400/30 flex items-center justify-center">
                 <span className="text-[9px] font-bold text-green-100">{initials}</span>
               </div>
@@ -91,7 +91,7 @@ export default function Navbar({ user }: NavbarProps) {
             </div>
             <button
               onClick={handleSignOut}
-              className="p-1.5 text-white/50 hover:text-white hover:bg-red-500/20 rounded-md transition-colors"
+              className="p-1.5 text-white/50 hover:text-white hover:bg-red-500/20 rounded-[3px] transition-colors"
               title="Sign out"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export default function Navbar({ user }: NavbarProps) {
           {/* Mobile menu button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="md:hidden p-2 rounded-[3px] text-white/80 hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Menu"
           >
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -116,7 +116,7 @@ export default function Navbar({ user }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`block px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                className={`block px-3 py-2.5 text-sm font-medium rounded-[3px] transition-colors ${
                   isActive(link.href, link.exact)
                     ? 'bg-white/15 text-white'
                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -129,7 +129,7 @@ export default function Navbar({ user }: NavbarProps) {
               <Link
                 href="/dashboard/admin"
                 onClick={() => setMenuOpen(false)}
-                className={`flex items-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2.5 text-sm font-medium rounded-[3px] transition-colors ${
                   isActive('/dashboard/admin')
                     ? 'bg-white/15 text-white'
                     : 'text-white/70 hover:text-white hover:bg-white/10'
@@ -149,7 +149,7 @@ export default function Navbar({ user }: NavbarProps) {
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-[3px] transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Sign out

@@ -32,7 +32,7 @@ export default function DateFilter() {
   }
 
   return (
-    <div className="bg-gray-50 rounded-2xl p-3 space-y-2.5">
+    <div className="bg-gray-50 rounded-[3px] p-3 space-y-2.5">
       {/* Date row */}
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 w-8 flex-shrink-0">Date</span>
@@ -41,7 +41,7 @@ export default function DateFilter() {
             <button
               key={f.value}
               onClick={() => setParam('filter', f.value)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+              className={`px-3 py-1 rounded-[3px] text-xs font-semibold transition-colors whitespace-nowrap ${
                 activeDate === f.value
                   ? 'bg-[#1B4332] text-white'
                   : 'bg-white text-gray-500 hover:text-gray-800 border border-gray-200'
@@ -64,7 +64,7 @@ export default function DateFilter() {
             <button
               key={f.value}
               onClick={() => setParam('type', f.value)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${
+              className={`px-3 py-1 rounded-[3px] text-xs font-semibold transition-colors whitespace-nowrap ${
                 activeType === f.value
                   ? 'bg-[#1B4332] text-white'
                   : 'bg-white text-gray-500 hover:text-gray-800 border border-gray-200'

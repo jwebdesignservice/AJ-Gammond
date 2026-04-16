@@ -114,9 +114,9 @@ export default async function DashboardPage({
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Link
           href="/dashboard/new"
-          className="flex items-center gap-4 bg-[#1B4332] text-white rounded-2xl p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
+          className="flex items-center gap-4 bg-[#1B4332] text-white rounded-[3px] p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
         >
-          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-white/20 rounded-[3px] flex items-center justify-center flex-shrink-0">
             <ClipboardCheck className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
@@ -128,9 +128,9 @@ export default async function DashboardPage({
 
         <Link
           href="/dashboard/site-record"
-          className="flex items-center gap-4 bg-[#1B4332] text-white rounded-2xl p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
+          className="flex items-center gap-4 bg-[#1B4332] text-white rounded-[3px] p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
         >
-          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 bg-white/20 rounded-[3px] flex items-center justify-center flex-shrink-0">
             <ClipboardList className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
@@ -149,7 +149,7 @@ export default async function DashboardPage({
       {/* Combined submissions list */}
       {combined.length === 0 ? (
         <div className="card text-center py-14">
-          <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-gray-100 rounded-[3px] flex items-center justify-center mx-auto mb-4">
             <FileText className="w-8 h-8 text-gray-400" />
           </div>
           <h3 className="font-semibold text-gray-900 mb-1">
@@ -180,7 +180,7 @@ export default async function DashboardPage({
                 href={href}
                 className="card-hover flex items-center gap-4"
               >
-                <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-gray-100 rounded-[3px] flex items-center justify-center flex-shrink-0">
                   {isChecklist
                     ? <ClipboardCheck className="w-5 h-5 text-gray-500" />
                     : <ClipboardList className="w-5 h-5 text-gray-500" />

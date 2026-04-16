@@ -13,31 +13,31 @@ body {
 
 /* Buttons */
 .btn-primary {
-  @apply bg-[#1B4332] text-white px-5 py-3 rounded-xl hover:bg-[#2D6A4F] transition-colors font-semibold text-base shadow-sm;
+  @apply bg-[#1B4332] text-white px-5 py-3 rounded-[3px] hover:bg-[#2D6A4F] transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-secondary {
-  @apply bg-white text-gray-700 px-5 py-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors font-semibold text-base shadow-sm;
+  @apply bg-white text-gray-700 px-5 py-3 rounded-[3px] border border-gray-200 hover:bg-gray-50 transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-danger {
-  @apply bg-red-600 text-white px-5 py-3 rounded-xl hover:bg-red-700 transition-colors font-semibold text-base shadow-sm;
+  @apply bg-red-600 text-white px-5 py-3 rounded-[3px] hover:bg-red-700 transition-colors font-semibold text-base shadow-sm;
 }
 
 .btn-sm {
-  @apply px-4 py-2 text-sm rounded-lg;
+  @apply px-4 py-2 text-sm rounded-[3px];
 }
 
 /* Inputs */
 .input {
-  @apply w-full px-4 py-3 border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent text-gray-900 placeholder-gray-400 text-base;
+  @apply w-full px-4 py-3 border border-gray-200 rounded-[3px] bg-white focus:outline-none focus:ring-2 focus:ring-[#1B4332] focus:border-transparent text-gray-900 placeholder-gray-400 text-base;
 }
 
 /* Cards */
 .card {
-  @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5;
+  @apply bg-white rounded-[3px] shadow-sm border border-gray-100 p-5;
 }
 
 .card-hover {
-  @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer;
+  @apply bg-white rounded-[3px] shadow-sm border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer;
 }

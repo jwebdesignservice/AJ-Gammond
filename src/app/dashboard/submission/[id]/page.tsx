@@ -27,7 +27,7 @@ function ChecklistReadOnly({ title, items }: { title: string; items: CheckItem[]
         {items.map((item) => {
           const value = resolveValue(item)
           return (
-            <div key={item.id} className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-gray-50">
+            <div key={item.id} className="flex items-center justify-between px-3 py-2.5 rounded-[3px] hover:bg-gray-50">
               <span className="text-sm text-gray-700 flex-1 pr-4">{item.label}</span>
               <div className="flex-shrink-0">
                 {value === 'yes' && (
@@ -91,7 +91,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
       <div className="flex items-center gap-3 pt-2">
         <Link
           href="/dashboard"
-          className="w-9 h-9 bg-white rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+          className="w-9 h-9 bg-white rounded-[3px] border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
         >
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
@@ -148,7 +148,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
               Comment / Fault Description
             </p>
-            <p className="text-gray-700 bg-gray-50 rounded-xl p-3 text-sm leading-relaxed">
+            <p className="text-gray-700 bg-gray-50 rounded-[3px] p-3 text-sm leading-relaxed">
               {formData.comment}
             </p>
           </div>
@@ -182,7 +182,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block aspect-square bg-gray-100 rounded-xl overflow-hidden hover:opacity-90 transition-opacity"
+                className="block aspect-square bg-gray-100 rounded-[3px] overflow-hidden hover:opacity-90 transition-opacity"
               >
                 {url.match(/\.(mp4|mov|webm)$/i) ? (
                   <video src={url} className="w-full h-full object-cover" />
@@ -205,7 +205,7 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
           </h3>
           <div className="space-y-3">
             {notes.map((note: SubmissionNote & { profiles?: { email: string } }) => (
-              <div key={note.id} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+              <div key={note.id} className="bg-gray-50 rounded-[3px] p-4 border border-gray-100">
                 <p className="text-gray-800 text-sm leading-relaxed">{note.note}</p>
                 <p className="text-xs text-gray-400 mt-2">
                   {note.profiles?.email} &middot;{' '}

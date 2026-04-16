@@ -165,7 +165,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
             >
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                  <div className={`w-8 h-8 rounded-[3px] flex items-center justify-center flex-shrink-0 ${
                     item.type === 'checklist'
                       ? 'bg-blue-50 text-blue-600'
                       : 'bg-emerald-50 text-emerald-600'

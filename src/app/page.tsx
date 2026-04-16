@@ -7,7 +7,7 @@ export default function Home() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-5 backdrop-blur-sm">
+          <div className="w-20 h-20 bg-white/20 rounded-[3px] flex items-center justify-center mx-auto mb-5 backdrop-blur-sm">
             <ClipboardCheck className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">AJ Gammond</h1>
@@ -15,7 +15,7 @@ export default function Home() {
         </div>
 
         {/* Feature bullets */}
-        <div className="bg-white/10 rounded-2xl p-5 mb-8 space-y-3">
+        <div className="bg-white/10 rounded-[3px] p-5 mb-8 space-y-3">
           {[
             { icon: ShieldCheck, text: 'Site induction & safety checks' },
             { icon: FileText, text: 'Machine daily inspection records' },
@@ -32,13 +32,13 @@ export default function Home() {
         <div className="space-y-3">
           <Link
             href="/login"
-            className="block w-full bg-white text-[#1B4332] text-center px-5 py-3.5 rounded-xl font-bold text-base shadow hover:bg-green-50 transition-colors"
+            className="block w-full bg-white text-[#1B4332] text-center px-5 py-3.5 rounded-[3px] font-bold text-base shadow hover:bg-green-50 transition-colors"
           >
             Sign In
           </Link>
           <Link
             href="/register"
-            className="block w-full bg-white/20 text-white text-center px-5 py-3.5 rounded-xl font-semibold text-base border border-white/30 hover:bg-white/30 transition-colors"
+            className="block w-full bg-white/20 text-white text-center px-5 py-3.5 rounded-[3px] font-semibold text-base border border-white/30 hover:bg-white/30 transition-colors"
           >
             Create Account
           </Link>

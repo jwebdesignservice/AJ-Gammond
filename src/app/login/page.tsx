@@ -37,7 +37,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/">
-            <div className="w-16 h-16 bg-[#1B4332] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div className="w-16 h-16 bg-[#1B4332] rounded-[3px] flex items-center justify-center mx-auto mb-4 shadow-md">
               <ClipboardCheck className="w-8 h-8 text-white" />
             </div>
           </Link>
@@ -49,7 +49,7 @@ export default function LoginPage() {
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-50 text-red-700 p-3 rounded-xl text-sm border border-red-100">
+              <div className="bg-red-50 text-red-700 p-3 rounded-[3px] text-sm border border-red-100">
                 {error}
               </div>
             )}

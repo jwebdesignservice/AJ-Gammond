@@ -27,7 +27,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
   const config = statusConfig[status]
 
   return (
-    <span className={`inline-block px-2.5 py-1 text-xs font-semibold rounded-lg ${config.className}`}>
+    <span className={`inline-block px-2.5 py-1 text-xs font-semibold rounded-[3px] ${config.className}`}>
       {config.label}
     </span>
   )

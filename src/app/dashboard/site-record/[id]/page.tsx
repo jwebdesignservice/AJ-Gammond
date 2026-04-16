@@ -38,7 +38,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
       <div className="flex items-center gap-3 pt-2">
         <Link
           href="/dashboard"
-          className="w-9 h-9 bg-white rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+          className="w-9 h-9 bg-white rounded-[3px] border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
         >
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
@@ -132,7 +132,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
             {siteRecord.materials.map((code) => (
               <span
                 key={code}
-                className="bg-[#1B4332] text-white text-sm font-semibold px-3 py-1.5 rounded-lg"
+                className="bg-[#1B4332] text-white text-sm font-semibold px-3 py-1.5 rounded-[3px]"
               >
                 {code}
               </span>
