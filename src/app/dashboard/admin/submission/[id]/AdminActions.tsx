@@ -54,7 +54,7 @@ export default function AdminActions({ submissionId, currentStatus }: AdminActio
       <h3 className="font-semibold text-lg text-gray-900">Admin Actions</h3>
 
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-[4px] text-sm">
+        <div className="bg-red-50 text-red-600 p-3 rounded-[3px] text-sm">
           {error}
         </div>
       )}

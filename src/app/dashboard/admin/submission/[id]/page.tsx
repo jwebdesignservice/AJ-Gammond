@@ -290,7 +290,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </h3>
           <div className="space-y-3">
             {notes.map((note: SubmissionNote & { admin?: { email: string } }) => (
-              <div key={note.id} className="bg-gray-50 p-3 rounded-[4px]">
+              <div key={note.id} className="bg-gray-50 p-3 rounded-[3px]">
                 <p className="text-gray-700">{note.note}</p>
                 <p className="text-xs text-gray-500 mt-2">
                   {note.admin?.email} • {new Date(note.created_at).toLocaleDateString('en-GB', {

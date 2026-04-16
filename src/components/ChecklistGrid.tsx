@@ -60,7 +60,7 @@ export default function ChecklistGrid({ title, items, onUpdate, readOnly = false
           return (
             <div
               key={item.id}
-              className={`flex items-center justify-between px-3 py-2 rounded-[4px] transition-colors ${isUnanswered ? 'bg-red-50' : 'hover:bg-gray-50'}`}
+              className={`flex items-center justify-between px-3 py-2 rounded-[3px] transition-colors ${isUnanswered ? 'bg-red-50' : 'hover:bg-gray-50'}`}
             >
               <span className="text-sm text-gray-700 flex-1 pr-4">{item.label}</span>
 
@@ -69,7 +69,7 @@ export default function ChecklistGrid({ title, items, onUpdate, readOnly = false
                 onClick={() => !readOnly && onUpdate?.(item.id, cycleValue(currentValue))}
                 disabled={readOnly}
                 aria-label={`${item.label}: ${currentValue ?? 'not checked'}`}
-                className={`w-20 h-10 rounded-[4px] flex items-center justify-center gap-1.5 text-sm font-medium transition-all touch-manipulation flex-shrink-0 ${
+                className={`w-20 h-10 rounded-[3px] flex items-center justify-center gap-1.5 text-sm font-medium transition-all touch-manipulation flex-shrink-0 ${
                   readOnly ? 'cursor-default' : 'cursor-pointer active:scale-95'
                 } ${
                   currentValue === 'yes'
