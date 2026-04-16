@@ -103,10 +103,16 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
       </div>
 
       {/* Job Details */}
-      {(formData.contractor || formData.siteAddress || formData.machineType || formData.machineCode) && (
+      {(formData.date || formData.contractor || formData.siteAddress || formData.machineType || formData.machineCode) && (
         <div className="card">
           <h3 className="font-bold text-gray-900 mb-4">Job Details</h3>
           <div className="grid grid-cols-2 gap-4">
+            {formData.date && (
+              <div className="col-span-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Date</p>
+                <p className="text-gray-900 font-medium">{new Date(formData.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+              </div>
+            )}
             {formData.contractor && (
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Contractor</p>

@@ -14,6 +14,7 @@ export default function NewChecklistPage() {
   const [machineItems, setMachineItems] = useState<CheckItem[]>(
     JSON.parse(JSON.stringify(machineCheckItems))
   )
+  const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
   const [contractor, setContractor] = useState('')
   const [siteAddress, setSiteAddress] = useState('')
   const [machineType, setMachineType] = useState<MachineType | ''>('')
@@ -106,6 +107,7 @@ export default function NewChecklistPage() {
 
       // Build form data
       const formData: FormData = {
+        date,
         contractor,
         siteAddress,
         machineType: machineType as MachineType,
@@ -199,6 +201,20 @@ export default function NewChecklistPage() {
           <div>
             <h3 className="font-bold text-gray-900 mb-1">Job Details</h3>
             <p className="text-gray-500 text-sm">Fill in site and machine information before starting</p>
+          </div>
+
+          <div>
+            <label htmlFor="date" className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="input"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

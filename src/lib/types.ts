@@ -14,6 +14,7 @@ export type MachineType = 'Trencher' | 'Rocksaw' | 'Rock Hawg'
 export type MachineCode = '030' | '066' | '1405' | '1408' | '1409' | '1421' | '1427' | '1428' | '1431' | '2401'
 
 export interface FormData {
+  date?: string
   contractor: string
   siteAddress: string
   machineType: MachineType | ''

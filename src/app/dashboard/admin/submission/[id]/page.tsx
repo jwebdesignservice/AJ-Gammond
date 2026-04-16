@@ -126,6 +126,10 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
             <h3 className="text-sm font-bold text-[#1B4332] uppercase tracking-wide">Job Information</h3>
           </div>
+          <div className="px-4 py-3 border-b border-gray-200">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</p>
+            <p className="text-gray-900 font-medium mt-0.5">{formData.date ? new Date(formData.date + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '—'}</p>
+          </div>
           <div className="grid grid-cols-2 divide-x divide-gray-200">
             <div className="px-4 py-3 border-b border-gray-200">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contractor</p>
