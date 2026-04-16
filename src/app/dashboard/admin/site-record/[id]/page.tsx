@@ -226,8 +226,8 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
       </div>
 
       {/* Bottom PDF button */}
-      <div className="flex justify-center">
-        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} />
+      <div>
+        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth />
       </div>
 
       <AdminActions recordId={id} currentStatus={siteRecord.status} />

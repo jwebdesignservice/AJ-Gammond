@@ -276,8 +276,8 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
       </div>
 
       {/* Bottom PDF button */}
-      <div className="flex justify-center">
-        <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} />
+      <div>
+        <DownloadPdfButton contentId="pdf-content" filename={`checklist-${submission.name || id}`} fullWidth />
       </div>
 
       <AdminActions submissionId={id} currentStatus={submission.status} />
