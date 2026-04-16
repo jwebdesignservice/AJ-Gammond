@@ -70,7 +70,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   type PartialRow = { id: string; name?: string; customer?: string; status: SubmissionStatus; created_at: string; profiles: { email: string; name: string } | null }
 
   if (params.type !== 'site_record') {
-    ;((submissions || []) as PartialRow[]).forEach((s) => {
+    ;((submissions || []) as unknown as PartialRow[]).forEach((s) => {
       items.push({
         id: s.id,
         type: 'checklist',
@@ -84,7 +84,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   }
 
   if (params.type !== 'checklist') {
-    ;((siteRecords || []) as PartialRow[]).forEach((r) => {
+    ;((siteRecords || []) as unknown as PartialRow[]).forEach((r) => {
       items.push({
         id: r.id,
         type: 'site_record',
