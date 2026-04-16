@@ -3,9 +3,9 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MessageSquare } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
-import { SiteRecord, SiteRecordRow } from '@/lib/types'
+import { SiteRecord, SiteRecordRow, SubmissionNote } from '@/lib/types'
 
 export default async function SiteRecordDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -20,6 +20,12 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
   if (!record) notFound()
 
   const siteRecord = record as SiteRecord
+
+  const { data: notes } = await supabase
+    .from('submission_notes')
+    .select('*, profiles:admin_id (email)')
+    .eq('submission_id', id)
+    .order('created_at', { ascending: false })
 
   const submittedDate = new Date(siteRecord.created_at).toLocaleDateString('en-GB', {
     weekday: 'long',
@@ -168,6 +174,31 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
           )}
         </div>
       </div>
+      {/* Admin notes */}
+      {notes && notes.length > 0 && (
+        <div className="card">
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-gray-500" />
+            Admin Notes
+          </h3>
+          <div className="space-y-3">
+            {notes.map((note: SubmissionNote & { profiles?: { email: string } }) => (
+              <div key={note.id} className="bg-gray-50 rounded-[3px] p-4 border border-gray-100">
+                <p className="text-gray-800 text-sm leading-relaxed">{note.note}</p>
+                <p className="text-xs text-gray-400 mt-2">
+                  {note.profiles?.email} &middot;{' '}
+                  {new Date(note.created_at).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
