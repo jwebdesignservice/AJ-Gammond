@@ -52,11 +52,20 @@ CREATE TABLE IF NOT EXISTS public.site_records (
   ajg_rep_signature     TEXT
 );
 
+CREATE TABLE IF NOT EXISTS public.site_record_notes (
+  id              UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  site_record_id  UUID REFERENCES public.site_records ON DELETE CASCADE NOT NULL,
+  admin_id        UUID REFERENCES public.profiles NOT NULL,
+  note            TEXT NOT NULL,
+  created_at      TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
 -- ── Enable RLS ──────────────────────────────────────────────────────────────
-ALTER TABLE public.profiles         ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.submissions       ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.submission_notes  ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.site_records      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.submissions         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.submission_notes    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_records        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_record_notes   ENABLE ROW LEVEL SECURITY;
 
 -- ── Functions (must be defined BEFORE policies that reference them) ─────────
 
@@ -137,6 +146,16 @@ CREATE POLICY "Users can view notes on own submissions" ON public.submission_not
 CREATE POLICY "Admins can view all notes" ON public.submission_notes FOR SELECT USING (public.is_admin());
 CREATE POLICY "Admins can create notes"   ON public.submission_notes FOR INSERT WITH CHECK (public.is_admin());
 
+-- ── Policies: site_record_notes ─────────────────────────────────────────────
+DROP POLICY IF EXISTS "Users can view notes on own site records" ON public.site_record_notes;
+DROP POLICY IF EXISTS "Admins can view all site record notes"    ON public.site_record_notes;
+DROP POLICY IF EXISTS "Admins can create site record notes"      ON public.site_record_notes;
+
+CREATE POLICY "Users can view notes on own site records" ON public.site_record_notes FOR SELECT
+  USING (EXISTS (SELECT 1 FROM public.site_records WHERE id = site_record_id AND user_id = auth.uid()));
+CREATE POLICY "Admins can view all site record notes" ON public.site_record_notes FOR SELECT USING (public.is_admin());
+CREATE POLICY "Admins can create site record notes"   ON public.site_record_notes FOR INSERT WITH CHECK (public.is_admin());
+
 -- ── Policies: site_records ──────────────────────────────────────────────────
 DROP POLICY IF EXISTS "Users can view own site records"   ON public.site_records;
 DROP POLICY IF EXISTS "Users can create site records"     ON public.site_records;
@@ -166,6 +185,7 @@ CREATE INDEX IF NOT EXISTS submissions_user_id_idx          ON public.submission
 CREATE INDEX IF NOT EXISTS submissions_status_idx           ON public.submissions(status);
 CREATE INDEX IF NOT EXISTS submissions_created_at_idx       ON public.submissions(created_at DESC);
 CREATE INDEX IF NOT EXISTS submission_notes_submission_id_idx ON public.submission_notes(submission_id);
+CREATE INDEX IF NOT EXISTS site_record_notes_record_id_idx   ON public.site_record_notes(site_record_id);
 CREATE INDEX IF NOT EXISTS site_records_user_id_idx         ON public.site_records(user_id);
 CREATE INDEX IF NOT EXISTS site_records_status_idx          ON public.site_records(status);
 CREATE INDEX IF NOT EXISTS site_records_created_at_idx      ON public.site_records(created_at DESC);

@@ -22,9 +22,9 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
   const siteRecord = record as SiteRecord
 
   const { data: notes } = await supabase
-    .from('submission_notes')
+    .from('site_record_notes')
     .select('*, profiles:admin_id (email)')
-    .eq('submission_id', id)
+    .eq('site_record_id', id)
     .order('created_at', { ascending: false })
 
   const submittedDate = new Date(siteRecord.created_at).toLocaleDateString('en-GB', {

@@ -23,9 +23,9 @@ export async function updateSiteRecordStatus(
 
   if (note?.trim()) {
     const { error: noteError } = await supabase
-      .from('submission_notes')
+      .from('site_record_notes')
       .insert({
-        submission_id: recordId,
+        site_record_id: recordId,
         admin_id: user.id,
         note: note.trim(),
       })
