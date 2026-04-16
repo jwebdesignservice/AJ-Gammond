@@ -5,7 +5,8 @@ import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
 import { CheckItem, CheckValue, FormData, MachineType, MachineCode } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
-import { Loader2, Upload, X, Camera, Info } from 'lucide-react'
+import { Loader2, Upload, X, Camera, Info, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function NewChecklistPage() {
   const [siteItems, setSiteItems] = useState<CheckItem[]>(
@@ -173,11 +174,19 @@ export default function NewChecklistPage() {
   return (
     <div className="max-w-2xl mx-auto pb-10">
       {/* Page header */}
-      <div className="pt-2 mb-6">
+      <div className="flex items-center gap-3 pt-2 mb-6">
+        <Link
+          href="/dashboard"
+          className="w-9 h-9 bg-white rounded-[3px] border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm"
+        >
+          <ArrowLeft className="w-4 h-4 text-gray-600" />
+        </Link>
+        <div>
         <h1 className="text-2xl font-bold text-gray-900">Daily Safety Checklist</h1>
         <p className="text-gray-500 text-sm mt-1">
           Complete all sections below before starting work today
         </p>
+        </div>
       </div>
 
       {/* How to fill in instructions */}

@@ -180,8 +180,11 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             {siteRecord.materials && siteRecord.materials.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {siteRecord.materials.map((code) => (
-                  <span key={code} className="bg-[#1B4332] text-white text-sm font-semibold px-3 py-1.5 rounded">
+                  <span key={code} className="bg-[#1B4332] text-white text-sm font-semibold px-3 py-1.5 rounded-[3px] inline-flex items-center gap-1.5">
                     {code}
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
                   </span>
                 ))}
               </div>
