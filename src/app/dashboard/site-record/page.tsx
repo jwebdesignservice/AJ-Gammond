@@ -147,6 +147,7 @@ export default function SiteRecordPage() {
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
         <div>
+          <p className="text-xs font-bold text-[#1B4332] uppercase tracking-wide">AJ Gammond Ltd</p>
           <h1 className="text-2xl font-bold text-gray-900">Site Record Sheet</h1>
           <p className="text-gray-500 text-sm mt-1">Complete all sections and submit when done</p>
         </div>
