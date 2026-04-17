@@ -6,7 +6,6 @@ import StatusBadge from '@/components/StatusBadge'
 import { FormData, CheckItem, CheckValue, DayOfWeek } from '@/lib/types'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
-import OnsiteSignatureCapture from '@/components/OnsiteSignatureCapture'
 
 function legacyValue(values: Record<DayOfWeek, CheckValue>): CheckValue {
   const days: DayOfWeek[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -297,16 +296,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </p>
         </div>
       </div>
-
-      {/* Capture in-person client signature — outside PDF content so the pad
-          itself isn't rendered. The saved signature is shown inside the
-          sign-off block above (and captured by the PDF). */}
-      <OnsiteSignatureCapture
-        recordId={id}
-        table="submissions"
-        initialSignature={submission.onsite_signature}
-        initialSignedAt={submission.onsite_signed_at}
-      />
 
       {/* Bottom PDF button */}
       <div>

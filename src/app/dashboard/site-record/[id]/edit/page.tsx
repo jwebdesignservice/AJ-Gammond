@@ -52,6 +52,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
   const [capacity,       setCapacity]       = useState('')
   const [signedPresence, setSignedPresence] = useState('')
   const [ajgRepSig,      setAjgRepSig]      = useState('')
+  const [clientSig,      setClientSig]      = useState('')
   const [materials,      setMaterials]      = useState<string[]>([])
   const [loading,        setLoading]        = useState(false)
   const [error,          setError]          = useState('')
@@ -87,6 +88,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
       setCapacity(sr.capacity ?? '')
       setSignedPresence(sr.signed_in_presence_of ?? '')
       setAjgRepSig(sr.ajg_rep_signature ?? '')
+      setClientSig(sr.onsite_signature ?? '')
       setMaterials(sr.materials ?? [])
 
       setInitialLoading(false)
@@ -139,6 +141,8 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
           capacity,
           signed_in_presence_of: signedPresence,
           ajg_rep_signature:     ajgRepSig,
+          onsite_signature:      clientSig || null,
+          onsite_signed_at:      clientSig ? new Date().toISOString() : null,
         })
         .eq('id', id)
 
@@ -496,6 +500,12 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
             value={ajgRepSig}
             onChange={setAjgRepSig}
             label="Signed by AJG Representative"
+          />
+
+          <SignaturePad
+            value={clientSig}
+            onChange={setClientSig}
+            label="Client Signature"
           />
 
           <p className="text-xs text-gray-400 border-t border-gray-100 pt-3 leading-relaxed">

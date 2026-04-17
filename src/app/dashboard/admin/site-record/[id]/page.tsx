@@ -6,7 +6,6 @@ import StatusBadge from '@/components/StatusBadge'
 import { SiteRecord, SiteRecordRow } from '@/lib/types'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
-import OnsiteSignatureCapture from '@/components/OnsiteSignatureCapture'
 
 export default async function AdminSiteRecordPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -300,17 +299,6 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           </p>
         </div>
       </div>
-
-      {/* Capture in-person client signature — outside the PDF content so it
-          doesn't render the editable pad on the PDF. The saved signature is
-          shown inline within the Sign-off Declaration block above, which IS
-          inside the PDF content. */}
-      <OnsiteSignatureCapture
-        recordId={id}
-        table="site_records"
-        initialSignature={siteRecord.onsite_signature}
-        initialSignedAt={siteRecord.onsite_signed_at}
-      />
 
       {/* Bottom PDF button */}
       <div>
