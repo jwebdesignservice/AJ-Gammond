@@ -465,7 +465,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
               value={worksAgreedBy}
               onChange={e => setWorksAgreedBy(e.target.value)}
               className="input font-serif italic"
-              placeholder="Type name to sign"
+              placeholder="Type name"
             />
             <p className="text-xs text-gray-400 mt-1">Client representative</p>
           </div>
