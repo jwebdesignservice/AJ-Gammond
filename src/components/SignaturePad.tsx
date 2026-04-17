@@ -37,16 +37,25 @@ export default function SignaturePad({
   const drawingRef     = useRef(false)
   const lastPtRef      = useRef<{ x: number; y: number } | null>(null)
   const hasStrokesRef  = useRef(false)
+  // Capture the initial `value` so that resize() never clears the canvas
+  // just because the parent re-rendered with a new data URL from our own
+  // onChange. Only the first value (on mount / reset) should ever seed the
+  // canvas; after that, the canvas is the source of truth.
+  const initialValueRef = useRef(value)
   const [isEmpty, setIsEmpty] = useState(!value)
 
-  // Sync canvas size to container width, reseed from `value` on load/resize.
+  // Sync canvas size to container width. Preserves the current drawing
+  // across resizes via toDataURL → re-drawImage. Intentionally stable
+  // (depends only on `height`) so it doesn't re-fire on every onChange.
   const resize = useCallback(() => {
     const canvas    = canvasRef.current
     const container = containerRef.current
     if (!canvas || !container) return
 
-    // Capture existing drawing (if any) so a resize doesn't wipe the user's work
-    const current = hasStrokesRef.current ? canvas.toDataURL('image/png') : value
+    // Prefer the live canvas contents over the ref so user strokes persist
+    const current = hasStrokesRef.current
+      ? canvas.toDataURL('image/png')
+      : initialValueRef.current
 
     const dpr = window.devicePixelRatio || 1
     const w   = container.clientWidth
@@ -70,12 +79,11 @@ export default function SignaturePad({
     if (current && current.startsWith('data:image')) {
       const img = new Image()
       img.onload = () => {
-        // Fit the previous signature inside the new canvas
         ctx.drawImage(img, 0, 0, w, h)
       }
       img.src = current
     }
-  }, [value, height])
+  }, [height])
 
   useEffect(() => {
     resize()
@@ -83,6 +91,24 @@ export default function SignaturePad({
     if (containerRef.current) ro.observe(containerRef.current)
     return () => ro.disconnect()
   }, [resize])
+
+  // If the parent explicitly resets `value` back to empty (eg. after a
+  // successful submit), wipe the canvas too.
+  useEffect(() => {
+    if (value === '' && hasStrokesRef.current) {
+      const canvas = canvasRef.current
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const dpr = window.devicePixelRatio || 1
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr)
+      hasStrokesRef.current = false
+      initialValueRef.current = ''
+      setIsEmpty(true)
+    }
+  }, [value])
 
   function pointFromEvent(e: MouseEvent | TouchEvent | PointerEvent) {
     const canvas = canvasRef.current
