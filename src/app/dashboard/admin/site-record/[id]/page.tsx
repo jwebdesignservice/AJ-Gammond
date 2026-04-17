@@ -246,26 +246,30 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.capacity || '—'}</p>
               </div>
             </div>
-            {/* Two name + signature pairs side-by-side */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            {/* Two name + signature pairs side-by-side. Left column uses flex so
+                its signature hugs the bottom, aligning with the right column's
+                signature (which sits below a Name row). */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+              <div className="flex flex-col">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence of AJG Rep (Client)</p>
-                {siteRecord.signed_in_presence_of_signature && siteRecord.signed_in_presence_of_signature.startsWith('data:image') ? (
-                  <img
-                    src={siteRecord.signed_in_presence_of_signature}
-                    alt="Client signature"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                  />
-                ) : siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
-                  // Legacy: signature was briefly stored in signed_in_presence_of
-                  <img
-                    src={siteRecord.signed_in_presence_of}
-                    alt="Client signature"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
-                )}
+                <div className="mt-auto">
+                  {siteRecord.signed_in_presence_of_signature && siteRecord.signed_in_presence_of_signature.startsWith('data:image') ? (
+                    <img
+                      src={siteRecord.signed_in_presence_of_signature}
+                      alt="Client signature"
+                      className="border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    />
+                  ) : siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
+                    // Legacy: signature was briefly stored in signed_in_presence_of
+                    <img
+                      src={siteRecord.signed_in_presence_of}
+                      alt="Client signature"
+                      className="border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    />
+                  ) : (
+                    <p className="text-gray-900 font-medium">{siteRecord.signed_in_presence_of || '—'}</p>
+                  )}
+                </div>
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed by AJG Representative</p>
