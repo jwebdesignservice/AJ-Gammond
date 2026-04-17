@@ -16,16 +16,21 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 );
 
 CREATE TABLE IF NOT EXISTS public.submissions (
-  id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id    UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-  status     TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
-  form_data  JSONB NOT NULL,
-  comment    TEXT,
-  name       TEXT NOT NULL,
-  signature  TEXT NOT NULL,
-  media_urls TEXT[] DEFAULT '{}'
+  id                 UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id            UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
+  created_at         TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  status             TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
+  form_data          JSONB NOT NULL,
+  comment            TEXT,
+  name               TEXT NOT NULL,
+  signature          TEXT NOT NULL,
+  onsite_signature   TEXT,
+  onsite_signed_at   TIMESTAMPTZ,
+  media_urls         TEXT[] DEFAULT '{}'
 );
+-- Backfill columns on existing installs
+ALTER TABLE public.submissions  ADD COLUMN IF NOT EXISTS onsite_signature TEXT;
+ALTER TABLE public.submissions  ADD COLUMN IF NOT EXISTS onsite_signed_at TIMESTAMPTZ;
 
 CREATE TABLE IF NOT EXISTS public.submission_notes (
   id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -49,8 +54,13 @@ CREATE TABLE IF NOT EXISTS public.site_records (
   works_agreed_by       TEXT NOT NULL,
   capacity              TEXT,
   signed_in_presence_of TEXT,
-  ajg_rep_signature     TEXT
+  ajg_rep_signature     TEXT,
+  onsite_signature      TEXT,
+  onsite_signed_at      TIMESTAMPTZ
 );
+-- Backfill columns on existing installs
+ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS onsite_signature TEXT;
+ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS onsite_signed_at TIMESTAMPTZ;
 
 CREATE TABLE IF NOT EXISTS public.site_record_notes (
   id              UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

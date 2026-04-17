@@ -195,6 +195,21 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
               )}
             </div>
           )}
+          {siteRecord.onsite_signature && (
+            <div className="col-span-2 pt-3 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">In-Person Client Signature</p>
+              <img
+                src={siteRecord.onsite_signature}
+                alt="In-person client signature"
+                className="max-h-20 max-w-[320px] border-b border-gray-300 pb-1"
+              />
+              {siteRecord.onsite_signed_at && (
+                <p className="text-xs text-gray-400 mt-1">
+                  Signed on {new Date(siteRecord.onsite_signed_at).toLocaleString('en-GB')}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
       {/* Admin notes */}

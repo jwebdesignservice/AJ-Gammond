@@ -52,6 +52,9 @@ export interface SiteRecord {
   capacity: string
   signed_in_presence_of: string
   ajg_rep_signature: string
+  /** In-person client signature captured by an admin from the admin panel. */
+  onsite_signature?: string | null
+  onsite_signed_at?: string | null
 }
 
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected' | 'needs_review'
@@ -67,6 +70,9 @@ export interface Submission {
   signature: string
   media_urls: string[]
   user_email?: string
+  /** In-person client signature captured by an admin from the admin panel. */
+  onsite_signature?: string | null
+  onsite_signed_at?: string | null
 }
 
 export interface SubmissionNote {

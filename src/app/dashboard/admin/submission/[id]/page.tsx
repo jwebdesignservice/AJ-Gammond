@@ -6,6 +6,7 @@ import StatusBadge from '@/components/StatusBadge'
 import { FormData, CheckItem, CheckValue, DayOfWeek } from '@/lib/types'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
+import OnsiteSignatureCapture from '@/components/OnsiteSignatureCapture'
 
 function legacyValue(values: Record<DayOfWeek, CheckValue>): CheckValue {
   const days: DayOfWeek[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -269,6 +270,21 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
                 )}
               </div>
             </div>
+            {submission.onsite_signature && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In-Person Client Signature</p>
+                <img
+                  src={submission.onsite_signature}
+                  alt="In-person client signature"
+                  className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                />
+                {submission.onsite_signed_at && (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Signed on {new Date(submission.onsite_signed_at).toLocaleString('en-GB')}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -279,6 +295,16 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </p>
         </div>
       </div>
+
+      {/* Capture in-person client signature — outside PDF content so the pad
+          itself isn't rendered. The saved signature is shown inside the
+          sign-off block above (and captured by the PDF). */}
+      <OnsiteSignatureCapture
+        recordId={id}
+        table="submissions"
+        initialSignature={submission.onsite_signature}
+        initialSignedAt={submission.onsite_signed_at}
+      />
 
       {/* Bottom PDF button */}
       <div>

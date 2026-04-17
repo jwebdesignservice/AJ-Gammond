@@ -6,6 +6,7 @@ import StatusBadge from '@/components/StatusBadge'
 import { SiteRecord, SiteRecordRow } from '@/lib/types'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
+import OnsiteSignatureCapture from '@/components/OnsiteSignatureCapture'
 
 export default async function AdminSiteRecordPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -264,6 +265,22 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 </p>
               )}
             </div>
+            {/* In-person client signature — captured from admin panel */}
+            {siteRecord.onsite_signature && (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In-Person Client Signature</p>
+                <img
+                  src={siteRecord.onsite_signature}
+                  alt="In-person client signature"
+                  className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                />
+                {siteRecord.onsite_signed_at && (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Signed on {new Date(siteRecord.onsite_signed_at).toLocaleString('en-GB')}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -281,6 +298,17 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
           </p>
         </div>
       </div>
+
+      {/* Capture in-person client signature — outside the PDF content so it
+          doesn't render the editable pad on the PDF. The saved signature is
+          shown inline within the Sign-off Declaration block above, which IS
+          inside the PDF content. */}
+      <OnsiteSignatureCapture
+        recordId={id}
+        table="site_records"
+        initialSignature={siteRecord.onsite_signature}
+        initialSignedAt={siteRecord.onsite_signed_at}
+      />
 
       {/* Bottom PDF button */}
       <div>
