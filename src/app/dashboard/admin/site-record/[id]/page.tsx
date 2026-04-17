@@ -251,36 +251,38 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
               </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">AJG Representative Signature</p>
-              {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
-                <img
-                  src={siteRecord.ajg_rep_signature}
-                  alt="AJG Representative Signature"
-                  className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                />
-              ) : (
-                <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
-                  {siteRecord.ajg_rep_signature || '—'}
-                </p>
-              )}
-            </div>
-            {/* In-person client signature — captured from admin panel */}
-            {siteRecord.onsite_signature && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
-                <img
-                  src={siteRecord.onsite_signature}
-                  alt="In-person client signature"
-                  className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                />
-                {siteRecord.onsite_signed_at && (
-                  <p className="text-xs text-gray-400 mt-1">
-                    Signed on {new Date(siteRecord.onsite_signed_at).toLocaleString('en-GB')}
+            {/* Signatures — AJG rep on the left, in-person client signature on the right */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">AJG Representative Signature</p>
+                {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
+                  <img
+                    src={siteRecord.ajg_rep_signature}
+                    alt="AJG Representative Signature"
+                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                  />
+                ) : (
+                  <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
+                    {siteRecord.ajg_rep_signature || '—'}
                   </p>
                 )}
               </div>
-            )}
+              {siteRecord.onsite_signature && (
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
+                  <img
+                    src={siteRecord.onsite_signature}
+                    alt="Client signature"
+                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                  />
+                  {siteRecord.onsite_signed_at && (
+                    <p className="text-xs text-gray-400 mt-1">
+                      Signed on {new Date(siteRecord.onsite_signed_at).toLocaleString('en-GB')}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
