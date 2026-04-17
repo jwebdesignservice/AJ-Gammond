@@ -268,7 +268,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             {/* In-person client signature — captured from admin panel */}
             {siteRecord.onsite_signature && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In-Person Client Signature</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
                 <img
                   src={siteRecord.onsite_signature}
                   alt="In-person client signature"

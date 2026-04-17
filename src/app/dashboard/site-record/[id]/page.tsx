@@ -197,7 +197,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
           )}
           {siteRecord.onsite_signature && (
             <div className="col-span-2 pt-3 border-t border-gray-100">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">In-Person Client Signature</p>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Client Signature</p>
               <img
                 src={siteRecord.onsite_signature}
                 alt="In-person client signature"

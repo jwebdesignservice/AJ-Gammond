@@ -272,7 +272,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
             </div>
             {submission.onsite_signature && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In-Person Client Signature</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
                 <img
                   src={submission.onsite_signature}
                   alt="In-person client signature"
