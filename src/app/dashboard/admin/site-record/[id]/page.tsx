@@ -246,29 +246,34 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.capacity || '—'}</p>
               </div>
             </div>
-            {/* Two signatures side-by-side: Signed in Presence Of on left, AJG Rep on right */}
+            {/* Two name + signature pairs side-by-side */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence Of</p>
-                {siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
+                <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
+                {siteRecord.signed_in_presence_of_signature && siteRecord.signed_in_presence_of_signature.startsWith('data:image') ? (
+                  <img
+                    src={siteRecord.signed_in_presence_of_signature}
+                    alt="Signed in presence of signature"
+                    className="mt-2 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                  />
+                ) : siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
+                  // Legacy records: signature was briefly stored in the name column
                   <img
                     src={siteRecord.signed_in_presence_of}
-                    alt="Signed in presence of"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    alt="Signed in presence of signature"
+                    className="mt-2 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
                   />
-                ) : (
-                  <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
-                    {siteRecord.signed_in_presence_of || '—'}
-                  </p>
-                )}
+                ) : null}
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">AJG Representative Signature</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed by AJG Representative</p>
+                <p className="text-gray-900 font-medium mt-0.5">{siteRecord.ajg_rep_name || '—'}</p>
                 {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
                   <img
                     src={siteRecord.ajg_rep_signature}
                     alt="AJG Representative Signature"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    className="mt-2 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
                   />
                 ) : (
                   <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">

@@ -52,6 +52,8 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
   const [capacity,       setCapacity]       = useState('')
   const [signedPresence, setSignedPresence] = useState('')
   const [ajgRepSig,      setAjgRepSig]      = useState('')
+  const [presenceSig,    setPresenceSig]    = useState('')
+  const [ajgRepName,     setAjgRepName]     = useState('')
   const [materials,      setMaterials]      = useState<string[]>([])
   const [loading,        setLoading]        = useState(false)
   const [error,          setError]          = useState('')
@@ -87,6 +89,8 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
       setCapacity(sr.capacity ?? '')
       setSignedPresence(sr.signed_in_presence_of ?? '')
       setAjgRepSig(sr.ajg_rep_signature ?? '')
+      setPresenceSig(sr.signed_in_presence_of_signature ?? '')
+      setAjgRepName(sr.ajg_rep_name ?? '')
       setMaterials(sr.materials ?? [])
 
       setInitialLoading(false)
@@ -139,6 +143,8 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
           capacity,
           signed_in_presence_of: signedPresence,
           ajg_rep_signature:     ajgRepSig,
+          signed_in_presence_of_signature: presenceSig || null,
+          ajg_rep_name:                    ajgRepName,
         })
         .eq('id', id)
 
@@ -481,16 +487,36 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
             />
           </div>
 
+          <div>
+            <FieldLabel>Signed in Presence of AJG Representative (Client) — Name</FieldLabel>
+            <input
+              type="text"
+              value={signedPresence}
+              onChange={e => setSignedPresence(e.target.value)}
+              className="input"
+              placeholder="Type name"
+            />
+          </div>
           <SignaturePad
-            value={signedPresence}
-            onChange={setSignedPresence}
-            label="Signed in Presence of AJG Representative"
+            value={presenceSig}
+            onChange={setPresenceSig}
+            label="Signed in Presence of AJG Representative (Client) — Signature"
           />
 
+          <div>
+            <FieldLabel>Signed by AJG Representative — Name</FieldLabel>
+            <input
+              type="text"
+              value={ajgRepName}
+              onChange={e => setAjgRepName(e.target.value)}
+              className="input"
+              placeholder="Type name"
+            />
+          </div>
           <SignaturePad
             value={ajgRepSig}
             onChange={setAjgRepSig}
-            label="Signed by AJG Representative"
+            label="Signed by AJG Representative — Signature"
           />
 
           <p className="text-xs text-gray-400 border-t border-gray-100 pt-3 leading-relaxed">

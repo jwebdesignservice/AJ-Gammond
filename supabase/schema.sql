@@ -61,6 +61,13 @@ CREATE TABLE IF NOT EXISTS public.site_records (
 -- Backfill columns on existing installs
 ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS onsite_signature TEXT;
 ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS onsite_signed_at TIMESTAMPTZ;
+-- Name of the person signing + separate signature column, added alongside the
+-- existing signed_in_presence_of (used for the NAME) and ajg_rep_signature
+-- (still the signature image). The new "signature" column holds the actual
+-- data URL for the presence-of signer; ajg_rep_name holds the printed name
+-- for the AJG rep.
+ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS signed_in_presence_of_signature TEXT;
+ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS ajg_rep_name TEXT;
 
 CREATE TABLE IF NOT EXISTS public.site_record_notes (
   id              UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

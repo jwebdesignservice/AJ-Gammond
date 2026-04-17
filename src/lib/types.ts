@@ -50,9 +50,15 @@ export interface SiteRecord {
   materials?: string[]
   works_agreed_by: string
   capacity: string
+  /** Name of the person in whose presence the AJG rep signed */
   signed_in_presence_of: string
+  /** Hand-drawn signature of the person in whose presence the AJG rep signed */
+  signed_in_presence_of_signature?: string | null
+  /** Printed name of the AJG rep */
+  ajg_rep_name?: string | null
+  /** Hand-drawn signature of the AJG rep */
   ajg_rep_signature: string
-  /** In-person client signature captured by an admin from the admin panel. */
+  /** Legacy — no longer used but kept to avoid breaking historic records. */
   onsite_signature?: string | null
   onsite_signed_at?: string | null
 }
