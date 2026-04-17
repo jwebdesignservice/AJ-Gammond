@@ -149,24 +149,24 @@ export async function POST(req: NextRequest) {
       ${worksAgreedBy ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;width:220px;">Works Agreed By</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${worksAgreedBy}</td></tr>` : ''}
       ${capacity      ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">In the Capacity of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${capacity}</td></tr>` : ''}
     </table>
-    <!-- Two signatures side-by-side (AJG Rep left, Signed in Presence Of right) -->
+    <!-- Two signatures side-by-side (Signed in Presence Of left, AJG Rep right) -->
     <table style="width:100%;border-collapse:separate;border-spacing:16px 0;padding-top:12px;border-top:1px solid #f3f4f6;">
       <tr style="vertical-align:top;">
-        <td style="width:50%;">
-          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">AJG Representative Signature</p>
-          ${ajgRepSig
-            ? ((ajgRepSig as string).startsWith('data:image')
-                ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
-                : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`)
-            : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`
-          }
-        </td>
         <td style="width:50%;">
           <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">Signed in Presence Of</p>
           ${signedPresence
             ? ((signedPresence as string).startsWith('data:image')
                 ? `<img src="${signedPresence}" alt="Signed in Presence Of" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
                 : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${signedPresence}</p>`)
+            : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`
+          }
+        </td>
+        <td style="width:50%;">
+          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">AJG Representative Signature</p>
+          ${ajgRepSig
+            ? ((ajgRepSig as string).startsWith('data:image')
+                ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
+                : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`)
             : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`
           }
         </td>
