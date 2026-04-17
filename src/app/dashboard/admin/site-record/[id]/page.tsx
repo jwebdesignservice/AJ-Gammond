@@ -269,18 +269,24 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed by AJG Representative</p>
-                <p className="text-gray-900 font-medium mt-0.5">{siteRecord.ajg_rep_name || '—'}</p>
-                {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
-                  <img
-                    src={siteRecord.ajg_rep_signature}
-                    alt="AJG Representative Signature"
-                    className="mt-2 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
-                    {siteRecord.ajg_rep_signature || '—'}
-                  </p>
-                )}
+                <div className="mt-2">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Name</p>
+                  <p className="text-gray-900 font-medium">{siteRecord.ajg_rep_name || '—'}</p>
+                </div>
+                <div className="mt-3">
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Signature</p>
+                  {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
+                    <img
+                      src={siteRecord.ajg_rep_signature}
+                      alt="AJG Representative Signature"
+                      className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    />
+                  ) : (
+                    <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
+                      {siteRecord.ajg_rep_signature || '—'}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

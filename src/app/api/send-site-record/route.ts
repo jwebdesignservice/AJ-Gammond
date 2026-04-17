@@ -159,13 +159,15 @@ export async function POST(req: NextRequest) {
             : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`}
         </td>
         <td style="width:50%;">
-          <p style="margin:0 0 2px 0;font-size:14px;color:#6b7280;">Signed by AJG Representative</p>
-          <p style="margin:0 0 8px 0;font-size:15px;color:#111827;font-weight:600;">${ajgRepName || '—'}</p>
+          <p style="margin:0 0 8px 0;font-size:14px;color:#6b7280;">Signed by AJG Representative</p>
+          <p style="margin:0;font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Name</p>
+          <p style="margin:0 0 10px 0;font-size:15px;color:#111827;font-weight:600;">${ajgRepName || '—'}</p>
+          <p style="margin:0;font-size:10px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Signature</p>
           ${ajgRepSig
             ? ((ajgRepSig as string).startsWith('data:image')
-                ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
-                : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`)
-            : ''
+                ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;margin-top:4px;" />`
+                : `<p style="margin:4px 0 0 0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`)
+            : `<p style="margin:4px 0 0 0;color:#9ca3af;font-size:14px;">—</p>`
           }
         </td>
       </tr>
