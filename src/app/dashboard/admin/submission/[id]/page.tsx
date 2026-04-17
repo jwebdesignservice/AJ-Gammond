@@ -251,13 +251,11 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
           </div>
           <div className="px-4 py-3">
             <p className="text-sm text-gray-700 mb-4">I confirm that all checks have been completed accurately and to the best of my knowledge.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-gray-200 pb-3 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</p>
                 <p className="text-gray-900 font-medium mt-0.5">{submission.name}</p>
               </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signature</p>
                 {submission.signature && submission.signature.startsWith('data:image') ? (
@@ -270,21 +268,6 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
                   <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5">{submission.signature || '—'}</p>
                 )}
               </div>
-              {submission.onsite_signature && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
-                  <img
-                    src={submission.onsite_signature}
-                    alt="Client signature"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
-                  />
-                  {submission.onsite_signed_at && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Signed on {new Date(submission.onsite_signed_at).toLocaleString('en-GB')}
-                    </p>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>

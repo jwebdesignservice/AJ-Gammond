@@ -145,29 +145,33 @@ export async function POST(req: NextRequest) {
 
   <div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;">
     <h3 style="margin-top:0;color:#374151;font-size:15px;">Sign-off Declaration</h3>
-    <table style="width:100%;border-collapse:collapse;">
-      ${worksAgreedBy  ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;width:220px;">Works Agreed By</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${worksAgreedBy}</td></tr>` : ''}
-      ${capacity       ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">In the Capacity of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${capacity}</td></tr>` : ''}
-      ${signedPresence && !(signedPresence as string).startsWith('data:image')
-        ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Signed in Presence of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${signedPresence}</td></tr>`
-        : ''}
+    <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+      ${worksAgreedBy ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;width:220px;">Works Agreed By</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${worksAgreedBy}</td></tr>` : ''}
+      ${capacity      ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">In the Capacity of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${capacity}</td></tr>` : ''}
     </table>
-    ${signedPresence && (signedPresence as string).startsWith('data:image')
-      ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;">
-          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">Signed in Presence of</p>
-          <img src="${signedPresence}" alt="Signed in Presence of" style="display:block;max-height:70px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />
-        </div>`
-      : ''}
-    ${ajgRepSig
-      ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;">
+    <!-- Two signatures side-by-side (AJG Rep left, Signed in Presence Of right) -->
+    <table style="width:100%;border-collapse:separate;border-spacing:16px 0;padding-top:12px;border-top:1px solid #f3f4f6;">
+      <tr style="vertical-align:top;">
+        <td style="width:50%;">
           <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">AJG Representative Signature</p>
-          ${(ajgRepSig as string).startsWith('data:image')
-            ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:90px;max-width:320px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
-            : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`
+          ${ajgRepSig
+            ? ((ajgRepSig as string).startsWith('data:image')
+                ? `<img src="${ajgRepSig}" alt="AJG Rep Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
+                : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${ajgRepSig}</p>`)
+            : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`
           }
-        </div>`
-      : ''
-    }
+        </td>
+        <td style="width:50%;">
+          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">Signed in Presence Of</p>
+          ${signedPresence
+            ? ((signedPresence as string).startsWith('data:image')
+                ? `<img src="${signedPresence}" alt="Signed in Presence Of" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
+                : `<p style="margin:0;color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${signedPresence}</p>`)
+            : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`
+          }
+        </td>
+      </tr>
+    </table>
   </div>
 </div>`
 

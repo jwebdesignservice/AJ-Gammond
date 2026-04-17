@@ -245,20 +245,8 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In the Capacity of</p>
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.capacity || '—'}</p>
               </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence Of</p>
-                {siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
-                  <img
-                    src={siteRecord.signed_in_presence_of}
-                    alt="Signed in presence of"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-16 max-w-[280px]"
-                  />
-                ) : (
-                  <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
-                )}
-              </div>
             </div>
-            {/* Signatures — AJG rep on the left, in-person client signature on the right */}
+            {/* Two signatures side-by-side: AJG Rep on left, Signed in Presence Of on right */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">AJG Representative Signature</p>
@@ -274,21 +262,20 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                   </p>
                 )}
               </div>
-              {siteRecord.onsite_signature && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Signature</p>
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence Of</p>
+                {siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
                   <img
-                    src={siteRecord.onsite_signature}
-                    alt="Client signature"
+                    src={siteRecord.signed_in_presence_of}
+                    alt="Signed in presence of"
                     className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
                   />
-                  {siteRecord.onsite_signed_at && (
-                    <p className="text-xs text-gray-400 mt-1">
-                      Signed on {new Date(siteRecord.onsite_signed_at).toLocaleString('en-GB')}
-                    </p>
-                  )}
-                </div>
-              )}
+                ) : (
+                  <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
+                    {siteRecord.signed_in_presence_of || '—'}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
