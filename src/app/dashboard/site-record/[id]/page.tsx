@@ -178,7 +178,15 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
           {siteRecord.signed_in_presence_of && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Signed in Presence Of</p>
-              <p className="text-gray-900 font-medium">{siteRecord.signed_in_presence_of}</p>
+              {siteRecord.signed_in_presence_of.startsWith('data:image') ? (
+                <img
+                  src={siteRecord.signed_in_presence_of}
+                  alt="Signed in presence of"
+                  className="max-h-16 max-w-[280px] border-b border-gray-300 pb-1"
+                />
+              ) : (
+                <p className="text-gray-900 font-medium">{siteRecord.signed_in_presence_of}</p>
+              )}
             </div>
           )}
           {siteRecord.ajg_rep_signature && (

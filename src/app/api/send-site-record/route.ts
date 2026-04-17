@@ -148,8 +148,16 @@ export async function POST(req: NextRequest) {
     <table style="width:100%;border-collapse:collapse;">
       ${worksAgreedBy  ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;width:220px;">Works Agreed By</td><td style="padding:4px 0;font-size:14px;color:#111827;font-weight:600;">${worksAgreedBy}</td></tr>` : ''}
       ${capacity       ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">In the Capacity of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${capacity}</td></tr>` : ''}
-      ${signedPresence ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Signed in Presence of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${signedPresence}</td></tr>` : ''}
+      ${signedPresence && !(signedPresence as string).startsWith('data:image')
+        ? `<tr><td style="padding:4px 0;font-size:14px;color:#6b7280;">Signed in Presence of</td><td style="padding:4px 0;font-size:14px;color:#111827;">${signedPresence}</td></tr>`
+        : ''}
     </table>
+    ${signedPresence && (signedPresence as string).startsWith('data:image')
+      ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;">
+          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">Signed in Presence of</p>
+          <img src="${signedPresence}" alt="Signed in Presence of" style="display:block;max-height:70px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />
+        </div>`
+      : ''}
     ${ajgRepSig
       ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f4f6;">
           <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">AJG Representative Signature</p>
