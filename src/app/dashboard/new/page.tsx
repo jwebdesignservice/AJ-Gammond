@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, machineCheckItems } from '@/lib/form-data'
 import { CheckItem, CheckValue, FormData, MachineType, MachineCode } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
+import SignaturePad from '@/components/SignaturePad'
 import { Loader2, Upload, X, Camera, Info, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
@@ -347,21 +348,12 @@ export default function NewChecklistPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="signature" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Signature <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="signature"
-                type="text"
-                value={signature}
-                onChange={(e) => setSignature(e.target.value)}
-                className="input font-serif italic"
-                placeholder="Type your name to sign"
-                required
-              />
-              <p className="text-xs text-gray-400 mt-1">Type your name as your digital signature</p>
-            </div>
+            <SignaturePad
+              value={signature}
+              onChange={setSignature}
+              label="Signature *"
+              required
+            />
           </div>
         </div>
 

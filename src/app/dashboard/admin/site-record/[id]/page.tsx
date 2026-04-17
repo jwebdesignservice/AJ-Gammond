@@ -114,15 +114,9 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Site Address</p>
             <p className="text-gray-900 font-medium mt-0.5">{siteRecord.site_address || '—'}</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-gray-200">
-            <div className="px-4 py-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Machine Code</p>
-              <p className="text-gray-900 font-medium mt-0.5">{siteRecord.machine_code || '—'}</p>
-            </div>
-            <div className="px-4 py-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Capacity</p>
-              <p className="text-gray-900 font-medium mt-0.5">{siteRecord.capacity || '—'}</p>
-            </div>
+          <div className="px-4 py-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Machine Code</p>
+            <p className="text-gray-900 font-medium mt-0.5">{siteRecord.machine_code || '—'}</p>
           </div>
         </div>
 
@@ -248,15 +242,27 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.works_agreed_by || '—'}</p>
               </div>
               <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">In the Capacity of</p>
+                <p className="text-gray-900 font-medium mt-0.5">{siteRecord.capacity || '—'}</p>
+              </div>
+              <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signed in Presence Of</p>
                 <p className="text-gray-900 font-medium mt-0.5">{siteRecord.signed_in_presence_of || '—'}</p>
               </div>
             </div>
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">AJG Representative Signature</p>
-              <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
-                {siteRecord.ajg_rep_signature || '—'}
-              </p>
+              {siteRecord.ajg_rep_signature && siteRecord.ajg_rep_signature.startsWith('data:image') ? (
+                <img
+                  src={siteRecord.ajg_rep_signature}
+                  alt="AJG Representative Signature"
+                  className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                />
+              ) : (
+                <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">
+                  {siteRecord.ajg_rep_signature || '—'}
+                </p>
+              )}
             </div>
           </div>
         </div>

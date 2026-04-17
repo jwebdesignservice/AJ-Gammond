@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { SiteRecordRow } from '@/lib/types'
 import { Loader2, Plus, Trash2, Info, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import SignaturePad from '@/components/SignaturePad'
 
 const MATERIALS = [
   { code: 'A',     label: 'Asphalt' },
@@ -14,7 +15,7 @@ const MATERIALS = [
   { code: 'LMC',   label: 'Lean Mix Concrete' },
   { code: 'LS',    label: 'Limestone' },
   { code: 'SS',    label: 'Sandstone' },
-  { code: 'BAS',   label: 'Basalt' },
+  { code: 'RCK',   label: 'Rock' },
   { code: 'CH',    label: 'Chalk' },
 ]
 
@@ -457,16 +458,11 @@ export default function SiteRecordPage() {
             />
           </div>
 
-          <div>
-            <FieldLabel>Signed by AJG Representative</FieldLabel>
-            <input
-              type="text"
-              value={ajgRepSig}
-              onChange={e => setAjgRepSig(e.target.value)}
-              className="input font-serif italic"
-              placeholder="Type name to sign"
-            />
-          </div>
+          <SignaturePad
+            value={ajgRepSig}
+            onChange={setAjgRepSig}
+            label="Signed by AJG Representative"
+          />
 
           <p className="text-xs text-gray-400 border-t border-gray-100 pt-3 leading-relaxed">
             By submitting this Site Record / Measure sheet you confirm that all the above information is correct.

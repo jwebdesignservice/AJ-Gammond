@@ -94,15 +94,9 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
             </div>
           )}
           {siteRecord.machine_code && (
-            <div>
+            <div className="col-span-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Machine Code</p>
               <p className="text-gray-900 font-medium">{siteRecord.machine_code}</p>
-            </div>
-          )}
-          {siteRecord.capacity && (
-            <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Capacity</p>
-              <p className="text-gray-900 font-medium">{siteRecord.capacity}</p>
             </div>
           )}
         </div>
@@ -175,6 +169,12 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
               <p className="text-gray-900 font-medium">{siteRecord.works_agreed_by}</p>
             </div>
           )}
+          {siteRecord.capacity && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">In the Capacity of</p>
+              <p className="text-gray-900 font-medium">{siteRecord.capacity}</p>
+            </div>
+          )}
           {siteRecord.signed_in_presence_of && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Signed in Presence Of</p>
@@ -184,7 +184,15 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
           {siteRecord.ajg_rep_signature && (
             <div className="col-span-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">AJG Representative Signature</p>
-              <p className="text-gray-900 font-serif italic text-lg">{siteRecord.ajg_rep_signature}</p>
+              {siteRecord.ajg_rep_signature.startsWith('data:image') ? (
+                <img
+                  src={siteRecord.ajg_rep_signature}
+                  alt="AJG Representative Signature"
+                  className="max-h-20 max-w-[320px] border-b border-gray-300 pb-1"
+                />
+              ) : (
+                <p className="text-gray-900 font-serif italic text-lg">{siteRecord.ajg_rep_signature}</p>
+              )}
             </div>
           )}
         </div>

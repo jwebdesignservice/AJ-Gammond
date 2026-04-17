@@ -258,7 +258,15 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Signature</p>
-                <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5">{submission.signature}</p>
+                {submission.signature && submission.signature.startsWith('data:image') ? (
+                  <img
+                    src={submission.signature}
+                    alt="Signature"
+                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                  />
+                ) : (
+                  <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5">{submission.signature || '—'}</p>
+                )}
               </div>
             </div>
           </div>

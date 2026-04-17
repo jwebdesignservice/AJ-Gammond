@@ -37,7 +37,7 @@ function buildChecklistHtml(items: CheckItem[]): string {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { submissionId, name, contractor, siteAddress, machineType, machineCode, siteItems, machineItems, comment, submittedAt } = body
+    const { submissionId, name, contractor, siteAddress, machineType, machineCode, siteItems, machineItems, comment, submittedAt, signature } = body
 
     const host = process.env.EMAIL_HOST
     const port = Number(process.env.EMAIL_PORT ?? 587)
@@ -114,9 +114,24 @@ export async function POST(req: NextRequest) {
 
   ${
     comment
-      ? `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;">
+      ? `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;margin-bottom:16px;">
           <h3 style="margin-top:0;color:#374151;font-size:15px;">Comment / Fault Description</h3>
           <p style="color:#374151;font-size:14px;white-space:pre-wrap;">${comment}</p>
+        </div>`
+      : ''
+  }
+
+  ${
+    signature
+      ? `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:16px;">
+          <h3 style="margin-top:0;color:#374151;font-size:15px;">Sign-off</h3>
+          <p style="color:#6b7280;font-size:14px;margin:4px 0 2px 0;">Name</p>
+          <p style="color:#111827;font-size:15px;font-weight:600;margin:0 0 10px 0;">${name}</p>
+          <p style="color:#6b7280;font-size:14px;margin:6px 0 4px 0;">Signature</p>
+          ${signature.startsWith('data:image')
+            ? `<img src="${signature}" alt="Signature" style="display:block;max-height:90px;max-width:320px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
+            : `<p style="color:#111827;font-family:Georgia,serif;font-style:italic;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:4px;display:inline-block;min-width:200px;">${signature}</p>`
+          }
         </div>`
       : ''
   }
