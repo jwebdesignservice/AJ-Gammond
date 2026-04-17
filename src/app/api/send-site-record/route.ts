@@ -153,11 +153,10 @@ export async function POST(req: NextRequest) {
     <table style="width:100%;border-collapse:separate;border-spacing:16px 0;padding-top:12px;border-top:1px solid #f3f4f6;">
       <tr style="vertical-align:top;">
         <td style="width:50%;">
-          <p style="margin:0 0 2px 0;font-size:14px;color:#6b7280;">Signed in Presence of AJG Rep (Client)</p>
-          <p style="margin:0 0 8px 0;font-size:15px;color:#111827;font-weight:600;">${signedPresence || '—'}</p>
+          <p style="margin:0 0 6px 0;font-size:14px;color:#6b7280;">Signed in Presence of AJG Rep (Client)</p>
           ${presenceSig && (presenceSig as string).startsWith('data:image')
             ? `<img src="${presenceSig}" alt="Client Signature" style="display:block;max-height:80px;max-width:280px;border-bottom:1px solid #d1d5db;padding-bottom:4px;" />`
-            : ''}
+            : `<p style="margin:0;color:#9ca3af;font-size:14px;">—</p>`}
         </td>
         <td style="width:50%;">
           <p style="margin:0 0 2px 0;font-size:14px;color:#6b7280;">Signed by AJG Representative</p>

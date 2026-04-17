@@ -453,20 +453,10 @@ export default function SiteRecordPage() {
             />
           </div>
 
-          <div>
-            <FieldLabel>Signed in Presence of AJG Representative (Client) — Name</FieldLabel>
-            <input
-              type="text"
-              value={signedPresence}
-              onChange={e => setSignedPresence(e.target.value)}
-              className="input"
-              placeholder="Type name"
-            />
-          </div>
           <SignaturePad
             value={presenceSig}
             onChange={setPresenceSig}
-            label="Signed in Presence of AJG Representative (Client) — Signature"
+            label="Signed in Presence of AJG Representative (Client)"
           />
 
           <div>
