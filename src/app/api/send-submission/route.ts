@@ -8,7 +8,7 @@ function buildChecklistSummary(items: CheckItem[]): string {
   return items
     .map((item) => {
       const v = item.value ?? null
-      const symbol = v === 'yes' ? '✅' : v === 'no' ? '❌' : '⬜'
+      const symbol = v === 'yes' ? '✅' : v === 'no' ? '❌' : v === 'na' ? '➖' : '⬜'
       return `  ${symbol} ${item.label}`
     })
     .join('\n')
@@ -24,6 +24,8 @@ function buildChecklistHtml(items: CheckItem[]): string {
           ? '<span style="color:#16a34a;font-weight:bold;">✅ Yes</span>'
           : v === 'no'
           ? '<span style="color:#dc2626;font-weight:bold;">❌ No</span>'
+          : v === 'na'
+          ? '<span style="color:#6b7280;font-weight:bold;">➖ N/A</span>'
           : '<span style="color:#9ca3af;">— Not checked</span>'
       return `<tr>
         <td style="padding:6px 12px;border-bottom:1px solid #f3f4f6;font-size:14px;color:#374151;">${item.label}</td>

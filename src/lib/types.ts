@@ -1,4 +1,4 @@
-export type CheckValue = 'yes' | 'no' | null
+export type CheckValue = 'yes' | 'no' | 'na' | null
 
 // Legacy type kept for reading old Supabase records
 export type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'

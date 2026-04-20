@@ -164,6 +164,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
                     <td className="px-4 py-2.5 text-center">
                       {val === 'yes' && <span className="inline-block bg-green-500 text-white text-xs font-bold px-3 py-1 rounded">YES</span>}
                       {val === 'no' && <span className="inline-block bg-red-500 text-white text-xs font-bold px-3 py-1 rounded">NO</span>}
+                      {val === 'na' && <span className="inline-block bg-gray-500 text-white text-xs font-bold px-3 py-1 rounded">N/A</span>}
                       {val === null && <span className="text-gray-400">—</span>}
                     </td>
                   </tr>
@@ -194,6 +195,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
                     <td className="px-4 py-2.5 text-center">
                       {val === 'yes' && <span className="inline-block bg-green-500 text-white text-xs font-bold px-3 py-1 rounded">YES</span>}
                       {val === 'no' && <span className="inline-block bg-red-500 text-white text-xs font-bold px-3 py-1 rounded">NO</span>}
+                      {val === 'na' && <span className="inline-block bg-gray-500 text-white text-xs font-bold px-3 py-1 rounded">N/A</span>}
                       {val === null && <span className="text-gray-400">—</span>}
                     </td>
                   </tr>

@@ -40,6 +40,11 @@ function ChecklistReadOnly({ title, items }: { title: string; items: CheckItem[]
                     <XCircle className="w-5 h-5" /> No
                   </span>
                 )}
+                {value === 'na' && (
+                  <span className="flex items-center gap-1 text-gray-600 text-sm font-semibold">
+                    <MinusCircle className="w-5 h-5" /> N/A
+                  </span>
+                )}
                 {value === null && (
                   <span className="flex items-center gap-1 text-gray-400 text-sm">
                     <MinusCircle className="w-4 h-4" /> —

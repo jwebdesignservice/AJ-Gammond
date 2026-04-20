@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckItem, CheckValue, DayOfWeek } from '@/lib/types'
-import { Check, X } from 'lucide-react'
+import { Check, X, Minus } from 'lucide-react'
 
 interface ChecklistGridProps {
   title: string
@@ -11,10 +11,11 @@ interface ChecklistGridProps {
   showValidation?: boolean
 }
 
-// Cycle: empty → yes → no → empty
+// Cycle: empty → yes → no → N/A → empty
 function cycleValue(current: CheckValue): CheckValue {
   if (current === null) return 'yes'
   if (current === 'yes') return 'no'
+  if (current === 'no') return 'na'
   return null
 }
 
@@ -76,11 +77,14 @@ export default function ChecklistGrid({ title, items, onUpdate, readOnly = false
                     ? 'bg-green-500 text-white'
                     : currentValue === 'no'
                     ? 'bg-red-500 text-white'
+                    : currentValue === 'na'
+                    ? 'bg-gray-500 text-white'
                     : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                 }`}
               >
                 {currentValue === 'yes' && <><Check className="w-4 h-4" /> Yes</>}
                 {currentValue === 'no' && <><X className="w-4 h-4" /> No</>}
+                {currentValue === 'na' && <><Minus className="w-4 h-4" /> N/A</>}
                 {currentValue === null && <span>—</span>}
               </button>
             </div>
