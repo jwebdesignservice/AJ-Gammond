@@ -1,5 +1,17 @@
 import { CheckItem } from './types'
 
+/**
+ * Width and depth are entered in millimetres; length is in linear metres.
+ * Cubic metres = (width / 1000) × (depth / 1000) × length.
+ */
+export function calcCubicMeters(width: string, depth: string, length: string): string {
+  const w = parseFloat(width)
+  const d = parseFloat(depth)
+  const l = parseFloat(length)
+  if (!isFinite(w) || !isFinite(d) || !isFinite(l) || w <= 0 || d <= 0 || l <= 0) return ''
+  return ((w / 1000) * (d / 1000) * l).toFixed(2)
+}
+
 // ─── Site Induction & Safety ───────────────────────────────────────────────
 // Edit the `label` strings below to change checklist items.
 // Add or remove objects to add/remove checklist rows.

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, AlertCircle, MessageSquare } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
 import { SiteRecord, SiteRecordRow, SubmissionNote } from '@/lib/types'
+import { calcCubicMeters } from '@/lib/form-data'
 
 export default async function SiteRecordDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -115,6 +116,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">Width</th>
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">Depth</th>
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">Length</th>
+                  <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">m³</th>
                   <th className="text-center text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">Shift</th>
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 py-2">Hrs</th>
                   <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wide px-5 py-2">Picks</th>
@@ -128,6 +130,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
                     <td className="px-3 py-3 text-gray-700 text-right">{row.width || '—'}</td>
                     <td className="px-3 py-3 text-gray-700 text-right">{row.depth || '—'}</td>
                     <td className="px-3 py-3 text-gray-700 text-right">{row.length || '—'}</td>
+                    <td className="px-3 py-3 text-gray-700 text-right">{calcCubicMeters(row.width, row.depth, row.length) || '—'}</td>
                     <td className="px-3 py-3 text-gray-700 text-center">{row.shift || '—'}</td>
                     <td className="px-3 py-3 text-gray-700 text-right">{row.hrs || '—'}</td>
                     <td className="px-5 py-3 text-gray-700 text-right">{row.picks || '—'}</td>

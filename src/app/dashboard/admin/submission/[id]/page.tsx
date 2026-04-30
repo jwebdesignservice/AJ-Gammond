@@ -277,7 +277,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
         {/* Footer */}
         <div className="border-t-2 border-[#1B4332] pt-3">
           <p className="text-xs text-gray-400 text-center">
-            Generated on {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} — AJ Gammond Civils Ltd
+            Generated on {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} — AJ Gammond Ltd
           </p>
         </div>
       </div>

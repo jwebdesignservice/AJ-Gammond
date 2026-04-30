@@ -120,7 +120,7 @@ export default async function DashboardPage({
             <ClipboardCheck className="w-6 h-6" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-base">Daily Checklist</p>
+            <p className="font-bold text-base">Daily Checklist Trenchers</p>
             <p className="text-green-200 text-sm">Safety &amp; machine checks</p>
           </div>
           <Plus className="w-5 h-5 flex-shrink-0" />

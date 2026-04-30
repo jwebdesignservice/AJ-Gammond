@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
 import { SiteRecord, SiteRecordRow } from '@/lib/types'
+import { calcCubicMeters } from '@/lib/form-data'
 import AdminActions from './AdminActions'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
 
@@ -137,6 +138,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                       <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Width</th>
                       <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Depth</th>
                       <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Length</th>
+                      <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">m³</th>
                       <th className="text-center text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Shift</th>
                       <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-3 py-2">Hours</th>
                       <th className="text-right text-xs font-bold text-gray-600 uppercase tracking-wide px-4 py-2">Picks</th>
@@ -150,6 +152,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                         <td className="px-3 py-2.5 text-gray-700 text-right">{row.width || '—'}</td>
                         <td className="px-3 py-2.5 text-gray-700 text-right">{row.depth || '—'}</td>
                         <td className="px-3 py-2.5 text-gray-700 text-right">{row.length || '—'}</td>
+                        <td className="px-3 py-2.5 text-gray-700 text-right">{calcCubicMeters(row.width, row.depth, row.length) || '—'}</td>
                         <td className="px-3 py-2.5 text-gray-700 text-center">{row.shift || '—'}</td>
                         <td className="px-3 py-2.5 text-gray-700 text-right">{row.hrs || '—'}</td>
                         <td className="px-4 py-2.5 text-gray-700 text-right">{row.picks || '—'}</td>
@@ -180,6 +183,10 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                         <p className="text-xs text-gray-500">Length</p>
                         <p className="text-gray-900 font-medium">{row.length || '—'}</p>
                       </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Cubic Meters (m³)</p>
+                      <p className="text-gray-900 font-medium">{calcCubicMeters(row.width, row.depth, row.length) || '—'}</p>
                     </div>
                     <div className="grid grid-cols-3 gap-2 text-sm">
                       <div>
@@ -306,7 +313,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
         {/* Footer */}
         <div className="border-t-2 border-[#1B4332] pt-3">
           <p className="text-xs text-gray-400 text-center">
-            Generated on {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} — AJ Gammond Civils Ltd
+            Generated on {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} — AJ Gammond Ltd
           </p>
         </div>
       </div>

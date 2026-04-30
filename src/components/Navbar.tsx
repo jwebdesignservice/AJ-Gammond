@@ -29,7 +29,8 @@ export default function Navbar({ user }: NavbarProps) {
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', exact: true },
-    { href: '/dashboard/new', label: 'New Checklist' },
+    { href: '/dashboard/new', label: 'Daily Checklist Trenchers' },
+    { href: '/dashboard/dustcollectors', label: 'Daily Checklist Dustcollectors' },
     { href: '/dashboard/site-record', label: 'Site Record' },
   ]
 

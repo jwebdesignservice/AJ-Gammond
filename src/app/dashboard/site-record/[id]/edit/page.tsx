@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { SiteRecord, SiteRecordRow } from '@/lib/types'
+import { calcCubicMeters } from '@/lib/form-data'
 import { Loader2, Plus, Trash2, Info, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import SignaturePad from '@/components/SignaturePad'
@@ -363,6 +364,18 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
                       step="0.1"
                     />
                   </div>
+                </div>
+
+                {/* Cubic Meters — auto-calculated */}
+                <div>
+                  <FieldLabel>Cubic Meters (m³)</FieldLabel>
+                  <input
+                    type="text"
+                    value={calcCubicMeters(row.width, row.depth, row.length)}
+                    readOnly
+                    className="input text-center px-2 bg-gray-100 cursor-not-allowed"
+                    placeholder="Auto from W × D × L"
+                  />
                 </div>
 
                 {/* Shift / HRS / Picks — 3 columns */}
