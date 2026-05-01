@@ -127,6 +127,20 @@ export default async function DashboardPage({
         </Link>
 
         <Link
+          href="/dashboard/dustcollectors"
+          className="flex items-center gap-4 bg-[#1B4332] text-white rounded-[3px] p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
+        >
+          <div className="w-12 h-12 bg-white/20 rounded-[3px] flex items-center justify-center flex-shrink-0">
+            <ClipboardCheck className="w-6 h-6" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-base">Daily Checklist Dust Collectors</p>
+            <p className="text-green-200 text-sm">Safety &amp; machine checks</p>
+          </div>
+          <Plus className="w-5 h-5 flex-shrink-0" />
+        </Link>
+
+        <Link
           href="/dashboard/site-record"
           className="flex items-center gap-4 bg-[#1B4332] text-white rounded-[3px] p-5 shadow-md hover:bg-[#2D6A4F] transition-colors"
         >

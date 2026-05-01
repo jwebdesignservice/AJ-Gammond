@@ -28,6 +28,43 @@ export const siteInductionItems: CheckItem[] = [
   { id: 'daily_checks',   label: 'I confirm all Daily checks have been made',            value: null },
 ]
 
+// ─── Dust Collector — PPE Equipment ───────────────────────────────────────
+
+export const dustCollectorPpeItems: CheckItem[] = [
+  { id: 'hard_hat',      label: 'Hard Hat',              value: null },
+  { id: 'hi_vis_jacket', label: 'Hi Visibility Jacket',  value: null },
+  { id: 'safety_boots',  label: 'Safety Boots',          value: null },
+  { id: 'gloves',        label: 'Gloves',                value: null },
+  { id: 'hi_vis_trousers', label: 'Hi Visibility Trousers', value: null },
+  { id: 'glasses',       label: 'Glasses',               value: null },
+  { id: 'ear_defenders', label: 'Ear Defenders',         value: null },
+  { id: 'dust_mask',     label: 'Dust Mask',             value: null },
+  { id: 'other_ppe',     label: 'Other',                 value: null },
+]
+
+// ─── Dust Collector — Machine Daily Checks ────────────────────────────────
+
+export const dustCollectorMachineCheckItems: CheckItem[] = [
+  { id: 'engine_oil',       label: 'Engine oil levels',              value: null },
+  { id: 'coolant',          label: 'Coolant Levels',                 value: null },
+  { id: 'hydraulic_oil',    label: 'Hydraulic Oil Levels',           value: null },
+  { id: 'air_filters',      label: 'Air Filters',                    value: null },
+  { id: 'leakages',         label: 'Visual inspection for Leakages', value: null },
+  { id: 'emergency_stops',  label: 'Emergency Stops',                value: null },
+  { id: 'fan_belts',        label: 'Fan Belts',                      value: null },
+  { id: 'track_tension',    label: 'Tracks tension',                 value: null },
+  { id: 'rotary_valve',     label: 'Rotary valve clear',             value: null },
+  { id: 'grease_points',    label: 'Grease points',                  value: null },
+  { id: 'dash_controls',    label: 'Dash - Gauges, Dials, Controls', value: null },
+  { id: 'compressor',       label: 'Compressor',                     value: null },
+  { id: 'air_valves',       label: 'Air valves',                     value: null },
+  { id: 'engine_cover',     label: 'Engine covers and guards',       value: null },
+  { id: 'hydraulic_hoses',  label: 'Hydraulic hoses & fittings',     value: null },
+  { id: 'flashing_lights',  label: 'Operational flashing lights',    value: null },
+  { id: 'ducting',          label: 'Ducting/fittings',               value: null },
+  { id: 'task_lighting',    label: 'Task Lighting',                  value: null },
+]
+
 // ─── Machine Daily Checks ──────────────────────────────────────────────────
 // Edit the `label` strings below to change checklist items.
 
