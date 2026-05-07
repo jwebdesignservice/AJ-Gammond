@@ -7,11 +7,9 @@ interface DownloadPdfButtonProps {
   contentId: string
   filename: string
   fullWidth?: boolean
-  /** When true, shrinks the entire content to fit on a single A4 page. */
-  singlePage?: boolean
 }
 
-export default function DownloadPdfButton({ contentId, filename, fullWidth = false, singlePage = false }: DownloadPdfButtonProps) {
+export default function DownloadPdfButton({ contentId, filename, fullWidth = false }: DownloadPdfButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const handleDownload = async () => {
@@ -30,38 +28,6 @@ export default function DownloadPdfButton({ contentId, filename, fullWidth = fal
       const margin = 10
       const usableWidth = pageWidth - margin * 2
       const usableHeight = pageHeight - margin * 2
-
-      // Single-page mode: render the whole element as one canvas and scale
-      // it down so it fits on a single A4 page (preserving aspect ratio).
-      if (singlePage) {
-        const canvas = await html2canvas(element, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-        })
-
-        const imgData = canvas.toDataURL('image/png')
-
-        // Fit to width first, then clamp to height if it's still too tall.
-        let drawWidth = usableWidth
-        let drawHeight = (canvas.height * usableWidth) / canvas.width
-
-        if (drawHeight > usableHeight) {
-          drawHeight = usableHeight
-          drawWidth = (canvas.width * usableHeight) / canvas.height
-        }
-
-        // Center horizontally so any leftover width sits as even side margins.
-        const x = margin + (usableWidth - drawWidth) / 2
-        const y = margin
-
-        pdf.addImage(imgData, 'PNG', x, y, drawWidth, drawHeight)
-
-        const safeName = filename.replace(/[^a-zA-Z0-9-_]/g, '_')
-        pdf.save(`${safeName}.pdf`)
-        return
-      }
 
       let currentY = margin
 
