@@ -61,7 +61,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             </p>
           </div>
         </div>
-        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth />
+        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth singlePage />
       </div>
 
       <div id="pdf-content" className="bg-white p-4 sm:p-6 border border-gray-200 rounded-[3px]">
@@ -320,7 +320,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
 
       {/* Bottom PDF button */}
       <div>
-        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth />
+        <DownloadPdfButton contentId="pdf-content" filename={`site-record-${siteRecord.customer || id}`} fullWidth singlePage />
       </div>
 
       <AdminActions recordId={id} currentStatus={siteRecord.status} />

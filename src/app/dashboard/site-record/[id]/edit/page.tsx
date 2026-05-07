@@ -17,6 +17,7 @@ const MATERIALS = [
   { code: 'SS',    label: 'Sandstone' },
   { code: 'RCK',   label: 'Rock' },
   { code: 'CH',    label: 'Chalk' },
+  { code: 'SUB',   label: 'Sub soil' },
 ]
 
 const emptyRow = (): SiteRecordRow => ({
