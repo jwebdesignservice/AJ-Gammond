@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { siteInductionItems, dustCollectorPpeItems, dustCollectorMachineCheckItems } from '@/lib/form-data'
-import { CheckItem, CheckValue, MachineCode } from '@/lib/types'
+import { CheckItem, CheckValue, DustCollectorCode } from '@/lib/types'
 import ChecklistGrid from '@/components/ChecklistGrid'
 import SignaturePad from '@/components/SignaturePad'
 import { Loader2, Upload, X, Camera, Info, ArrowLeft } from 'lucide-react'
@@ -22,7 +22,7 @@ export default function DustCollectorsChecklistPage() {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0])
   const [contractor, setContractor] = useState('')
   const [siteAddress, setSiteAddress] = useState('')
-  const [machineCode, setMachineCode] = useState<MachineCode | ''>('')
+  const [machineCode, setMachineCode] = useState<DustCollectorCode | ''>('')
   const [engineHours, setEngineHours] = useState('')
   const [comment, setComment] = useState('')
   const [name, setName] = useState('')
@@ -262,11 +262,11 @@ export default function DustCollectorsChecklistPage() {
               <select
                 id="machineCode"
                 value={machineCode}
-                onChange={(e) => setMachineCode(e.target.value as MachineCode)}
+                onChange={(e) => setMachineCode(e.target.value as DustCollectorCode)}
                 className="input"
               >
-                <option value="">Select machine code…</option>
-                {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as MachineCode[]).map((code) => (
+                <option value="">Select dust collector code…</option>
+                {(['JMS 10', 'JMS 20', 'JMS 30'] as DustCollectorCode[]).map((code) => (
                   <option key={code} value={code}>{code}</option>
                 ))}
               </select>
