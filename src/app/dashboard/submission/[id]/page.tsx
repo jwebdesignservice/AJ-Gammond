@@ -187,9 +187,17 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Name</p>
             <p className="text-gray-900 font-medium">{submission.name}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Signature</p>
-            <p className="text-gray-900 font-serif italic text-lg">{submission.signature}</p>
+            {submission.signature && submission.signature.startsWith('data:image') ? (
+              <img
+                src={submission.signature}
+                alt="Signature"
+                className="max-h-20 max-w-full sm:max-w-[320px] border-b border-gray-300 pb-1"
+              />
+            ) : (
+              <p className="text-gray-900 font-serif italic text-lg break-words">{submission.signature || '—'}</p>
+            )}
           </div>
         </div>
       </div>

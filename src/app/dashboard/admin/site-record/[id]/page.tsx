@@ -264,14 +264,14 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                     <img
                       src={siteRecord.signed_in_presence_of_signature}
                       alt="Client signature"
-                      className="border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                      className="border-b border-gray-300 pb-1 max-h-20 max-w-full sm:max-w-[320px]"
                     />
                   ) : siteRecord.signed_in_presence_of && siteRecord.signed_in_presence_of.startsWith('data:image') ? (
                     // Legacy: signature was briefly stored in signed_in_presence_of
                     <img
                       src={siteRecord.signed_in_presence_of}
                       alt="Client signature"
-                      className="border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                      className="border-b border-gray-300 pb-1 max-h-20 max-w-full sm:max-w-[320px]"
                     />
                   ) : (
                     <p className="text-gray-900 font-medium">{siteRecord.signed_in_presence_of || '—'}</p>
@@ -290,7 +290,7 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
                     <img
                       src={siteRecord.ajg_rep_signature}
                       alt="AJG Representative Signature"
-                      className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                      className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-full sm:max-w-[320px]"
                     />
                   ) : (
                     <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5 inline-block min-w-[200px]">

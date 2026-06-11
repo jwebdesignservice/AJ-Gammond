@@ -86,7 +86,7 @@ export default function OnsiteSignatureCapture({
             <img
               src={signature}
               alt="In-person client signature"
-              className="border-b border-gray-300 pb-1 max-h-24 max-w-[360px]"
+              className="border-b border-gray-300 pb-1 max-h-24 max-w-full sm:max-w-[360px]"
             />
             {savedAt && (
               <p className="text-xs text-gray-500 flex items-center gap-1.5">

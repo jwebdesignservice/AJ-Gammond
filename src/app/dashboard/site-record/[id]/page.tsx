@@ -107,7 +107,8 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
       {siteRecord.rows && siteRecord.rows.length > 0 && (
         <div className="card overflow-hidden">
           <h3 className="font-bold text-gray-900 mb-4">Work Records</h3>
-          <div className="overflow-x-auto -mx-5">
+          {/* Desktop: table (scrolls horizontally only if truly needed) */}
+          <div className="hidden sm:block overflow-x-auto -mx-5">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">
@@ -138,6 +139,51 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile: one clear card per entry — no squished columns, no sideways scroll */}
+          <div className="sm:hidden -mx-1 divide-y divide-gray-100">
+            {siteRecord.rows.map((row: SiteRecordRow, i: number) => (
+              <div key={i} className="py-3 first:pt-0 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Entry {i + 1}</span>
+                  <span className="text-sm font-medium text-gray-900">{row.date || '—'}</span>
+                </div>
+                {row.description && <p className="text-sm text-gray-700">{row.description}</p>}
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-500">Width</p>
+                    <p className="text-gray-900 font-medium">{row.width || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Depth</p>
+                    <p className="text-gray-900 font-medium">{row.depth || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Length</p>
+                    <p className="text-gray-900 font-medium">{row.length || '—'}</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Cubic Metres (m³)</p>
+                  <p className="text-gray-900 font-medium">{calcCubicMeters(row.width, row.depth, row.length) || '—'}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-500">Shift</p>
+                    <p className="text-gray-900 font-medium">{row.shift || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Hrs</p>
+                    <p className="text-gray-900 font-medium">{row.hrs || '—'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Picks</p>
+                    <p className="text-gray-900 font-medium">{row.picks || '—'}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -185,7 +231,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
                 <img
                   src={siteRecord.signed_in_presence_of}
                   alt="Signed in presence of"
-                  className="max-h-16 max-w-[280px] border-b border-gray-300 pb-1"
+                  className="max-h-16 max-w-full sm:max-w-[280px] border-b border-gray-300 pb-1"
                 />
               ) : (
                 <p className="text-gray-900 font-medium">{siteRecord.signed_in_presence_of}</p>
@@ -199,7 +245,7 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
                 <img
                   src={siteRecord.ajg_rep_signature}
                   alt="AJG Representative Signature"
-                  className="max-h-20 max-w-[320px] border-b border-gray-300 pb-1"
+                  className="max-h-20 max-w-full sm:max-w-[320px] border-b border-gray-300 pb-1"
                 />
               ) : (
                 <p className="text-gray-900 font-serif italic text-lg">{siteRecord.ajg_rep_signature}</p>

@@ -264,7 +264,7 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
                   <img
                     src={submission.signature}
                     alt="Signature"
-                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-[320px]"
+                    className="mt-1 border-b border-gray-300 pb-1 max-h-20 max-w-full sm:max-w-[320px]"
                   />
                 ) : (
                   <p className="text-gray-900 font-serif italic text-lg border-b border-gray-300 pb-1 mt-0.5">{submission.signature || '—'}</p>
