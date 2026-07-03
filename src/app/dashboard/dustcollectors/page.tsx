@@ -257,7 +257,7 @@ export default function DustCollectorsChecklistPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="machineCode" className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Machine Code <span className="text-red-500">*</span>
+                Dust Collector <span className="text-red-500">*</span>
               </label>
               <select
                 id="machineCode"
@@ -265,7 +265,7 @@ export default function DustCollectorsChecklistPage() {
                 onChange={(e) => setMachineCode(e.target.value as DustCollectorCode)}
                 className="input"
               >
-                <option value="">Select dust collector code…</option>
+                <option value="">Select dust collector…</option>
                 {(['JMS 10', 'JMS 20', 'JMS 30'] as DustCollectorCode[]).map((code) => (
                   <option key={code} value={code}>{code}</option>
                 ))}

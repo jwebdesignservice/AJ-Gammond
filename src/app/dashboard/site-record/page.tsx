@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { SiteRecordRow } from '@/lib/types'
 import { calcCubicMeters } from '@/lib/form-data'
-import { Loader2, Plus, Trash2, Info, ArrowLeft } from 'lucide-react'
+import { Loader2, Plus, Trash2, Info, ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import SignaturePad from '@/components/SignaturePad'
 
@@ -47,6 +47,7 @@ export default function SiteRecordPage() {
   const [machineType,    setMachineType]    = useState('')
   const [siteAddress,    setSiteAddress]    = useState('')
   const [machineCode,    setMachineCode]    = useState('')
+  const [dustCollector,  setDustCollector]  = useState('')
   const [rows,           setRows]           = useState<SiteRecordRow[]>([emptyRow()])
   const [worksAgreedBy,  setWorksAgreedBy]  = useState('')
   const [capacity,       setCapacity]       = useState('')
@@ -56,6 +57,7 @@ export default function SiteRecordPage() {
   const [ajgRepName,     setAjgRepName]     = useState('')
   const [materials,      setMaterials]      = useState<string[]>([])
   const [loading,        setLoading]        = useState(false)
+  const [savingDraft,    setSavingDraft]    = useState(false)
   const [error,          setError]          = useState('')
 
   const toggleMaterial = (code: string) =>
@@ -96,6 +98,7 @@ export default function SiteRecordPage() {
           machine_type:          machineType,
           site_address:          siteAddress,
           machine_code:          machineCode,
+          dust_collector:        dustCollector || null,
           rows,
           materials,
           works_agreed_by:       worksAgreedBy,
@@ -140,6 +143,44 @@ export default function SiteRecordPage() {
     } catch (err: unknown) {
       setError((err as { message?: string })?.message ?? 'Something went wrong. Please try again.')
       setLoading(false)
+    }
+  }
+
+  // Save progress without submitting. No validation — a draft can be partial —
+  // and no admin email. The draft appears on the dashboard to resume later.
+  const saveAsDraft = async () => {
+    setError('')
+    setSavingDraft(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      const { error: insertError } = await supabase
+        .from('site_records')
+        .insert({
+          user_id:               user.id,
+          status:                'draft',
+          customer,
+          machine_type:          machineType,
+          site_address:          siteAddress,
+          machine_code:          machineCode,
+          dust_collector:        dustCollector || null,
+          rows,
+          materials,
+          works_agreed_by:       worksAgreedBy,
+          capacity,
+          signed_in_presence_of:           signedPresence,
+          signed_in_presence_of_signature: presenceSig || null,
+          ajg_rep_name:                    ajgRepName,
+          ajg_rep_signature:               ajgRepSig,
+        })
+
+      if (insertError) throw insertError
+
+      window.location.href = '/dashboard'
+    } catch (err: unknown) {
+      setError((err as { message?: string })?.message ?? 'Could not save draft. Please try again.')
+      setSavingDraft(false)
     }
   }
 
@@ -223,11 +264,25 @@ export default function SiteRecordPage() {
                 className="input"
               >
                 <option value="">Select…</option>
-                {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as const).map(c => (
+                {(['030', '066', '1405', '1408', '1409', '1415', '1421', '1428', '1431', '2401'] as const).map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
+          </div>
+
+          <div>
+            <FieldLabel>Dust Collector</FieldLabel>
+            <select
+              value={dustCollector}
+              onChange={e => setDustCollector(e.target.value)}
+              className="input"
+            >
+              <option value="">Select…</option>
+              {(['JMS 10', 'JMS 20', 'JMS 30'] as const).map(dc => (
+                <option key={dc} value={dc}>{dc}</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -494,10 +549,25 @@ export default function SiteRecordPage() {
           </p>
         </div>
 
+        {/* Save as draft */}
+        <button
+          type="button"
+          onClick={saveAsDraft}
+          disabled={loading || savingDraft}
+          className="btn-secondary w-full flex items-center justify-center text-base py-4"
+        >
+          {savingDraft
+            ? <><Loader2 className="w-5 h-5 animate-spin mr-2" />Saving…</>
+            : <><Save className="w-5 h-5 mr-2" />Save as draft</>}
+        </button>
+        <p className="text-center text-xs text-gray-400 -mt-1">
+          Save your progress and add more daily entries later. Nothing is sent to an administrator until you submit.
+        </p>
+
         {/* Submit */}
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || savingDraft}
           className="btn-primary w-full flex items-center justify-center text-base py-4"
         >
           {loading

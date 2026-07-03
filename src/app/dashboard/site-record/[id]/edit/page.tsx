@@ -4,7 +4,7 @@ import { useState, useEffect, use } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { SiteRecord, SiteRecordRow } from '@/lib/types'
 import { calcCubicMeters } from '@/lib/form-data'
-import { Loader2, Plus, Trash2, Info, ArrowLeft } from 'lucide-react'
+import { Loader2, Plus, Trash2, Info, ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import SignaturePad from '@/components/SignaturePad'
 
@@ -48,6 +48,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
   const [machineType,    setMachineType]    = useState('')
   const [siteAddress,    setSiteAddress]    = useState('')
   const [machineCode,    setMachineCode]    = useState('')
+  const [dustCollector,  setDustCollector]  = useState('')
   const [rows,           setRows]           = useState<SiteRecordRow[]>([emptyRow()])
   const [worksAgreedBy,  setWorksAgreedBy]  = useState('')
   const [capacity,       setCapacity]       = useState('')
@@ -57,7 +58,10 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
   const [ajgRepName,     setAjgRepName]     = useState('')
   const [materials,      setMaterials]      = useState<string[]>([])
   const [loading,        setLoading]        = useState(false)
+  const [savingDraft,    setSavingDraft]    = useState(false)
   const [error,          setError]          = useState('')
+
+  const isDraft = record?.status === 'draft'
 
   useEffect(() => {
     async function loadRecord() {
@@ -73,8 +77,8 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
         return
       }
 
-      // Only allow editing rejected or needs_review submissions
-      if (data.status !== 'rejected' && data.status !== 'needs_review') {
+      // Only allow editing drafts, rejected, or needs_review submissions
+      if (data.status !== 'rejected' && data.status !== 'needs_review' && data.status !== 'draft') {
         window.location.href = `/dashboard/site-record/${id}`
         return
       }
@@ -85,6 +89,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
       setMachineType(sr.machine_type ?? '')
       setSiteAddress(sr.site_address ?? '')
       setMachineCode(sr.machine_code ?? '')
+      setDustCollector(sr.dust_collector ?? '')
       setRows(sr.rows && sr.rows.length > 0 ? sr.rows : [emptyRow()])
       setWorksAgreedBy(sr.works_agreed_by ?? '')
       setCapacity(sr.capacity ?? '')
@@ -138,6 +143,7 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
           machine_type:          machineType,
           site_address:          siteAddress,
           machine_code:          machineCode,
+          dust_collector:        dustCollector || null,
           rows,
           materials,
           works_agreed_by:       worksAgreedBy,
@@ -155,6 +161,43 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
     } catch (err: unknown) {
       setError((err as { message?: string })?.message ?? 'Something went wrong. Please try again.')
       setLoading(false)
+    }
+  }
+
+  // Keep the record as a draft — save progress without submitting for review.
+  const saveAsDraft = async () => {
+    setError('')
+    setSavingDraft(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+
+      const { error: updateError } = await supabase
+        .from('site_records')
+        .update({
+          status:                'draft',
+          customer,
+          machine_type:          machineType,
+          site_address:          siteAddress,
+          machine_code:          machineCode,
+          dust_collector:        dustCollector || null,
+          rows,
+          materials,
+          works_agreed_by:       worksAgreedBy,
+          capacity,
+          signed_in_presence_of: signedPresence,
+          ajg_rep_signature:     ajgRepSig,
+          signed_in_presence_of_signature: presenceSig || null,
+          ajg_rep_name:                    ajgRepName,
+        })
+        .eq('id', id)
+
+      if (updateError) throw updateError
+
+      window.location.href = '/dashboard'
+    } catch (err: unknown) {
+      setError((err as { message?: string })?.message ?? 'Could not save draft. Please try again.')
+      setSavingDraft(false)
     }
   }
 
@@ -183,14 +226,18 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
       {/* Page header */}
       <div className="flex items-center gap-3 pt-2 mb-6">
         <Link
-          href={`/dashboard/site-record/${id}`}
+          href={isDraft ? '/dashboard' : `/dashboard/site-record/${id}`}
           className="w-9 h-9 bg-white rounded-[3px] border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors shadow-sm flex-shrink-0"
         >
           <ArrowLeft className="w-4 h-4 text-gray-600" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Edit &amp; Resubmit</h1>
-          <p className="text-gray-500 text-sm mt-1">Make your changes below and resubmit for review</p>
+          <h1 className="text-2xl font-bold text-gray-900">{isDraft ? 'Continue Site Record' : 'Edit & Resubmit'}</h1>
+          <p className="text-gray-500 text-sm mt-1">
+            {isDraft
+              ? 'Add another daily entry, save your progress, or submit when the job is complete'
+              : 'Make your changes below and resubmit for review'}
+          </p>
         </div>
       </div>
 
@@ -257,11 +304,25 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
                 className="input"
               >
                 <option value="">Select…</option>
-                {(['030', '066', '1405', '1408', '1409', '1421', '1427', '1428', '1431', '2401'] as const).map(c => (
+                {(['030', '066', '1405', '1408', '1409', '1415', '1421', '1428', '1431', '2401'] as const).map(c => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
+          </div>
+
+          <div>
+            <FieldLabel>Dust Collector</FieldLabel>
+            <select
+              value={dustCollector}
+              onChange={e => setDustCollector(e.target.value)}
+              className="input"
+            >
+              <option value="">Select…</option>
+              {(['JMS 10', 'JMS 20', 'JMS 30'] as const).map(dc => (
+                <option key={dc} value={dc}>{dc}</option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -528,19 +589,38 @@ export default function EditSiteRecordPage({ params }: { params: Promise<{ id: s
           </p>
         </div>
 
+        {/* Save as draft — drafts only */}
+        {isDraft && (
+          <>
+            <button
+              type="button"
+              onClick={saveAsDraft}
+              disabled={loading || savingDraft}
+              className="btn-secondary w-full flex items-center justify-center text-base py-4"
+            >
+              {savingDraft
+                ? <><Loader2 className="w-5 h-5 animate-spin mr-2" />Saving…</>
+                : <><Save className="w-5 h-5 mr-2" />Save as draft</>}
+            </button>
+            <p className="text-center text-xs text-gray-400 -mt-1">
+              Save your progress and add more daily entries later. Nothing is sent to an administrator until you submit.
+            </p>
+          </>
+        )}
+
         {/* Submit */}
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || savingDraft}
           className="btn-primary w-full flex items-center justify-center text-base py-4"
         >
           {loading
-            ? <><Loader2 className="w-5 h-5 animate-spin mr-2" />Resubmitting…</>
-            : 'Resubmit Site Record'}
+            ? <><Loader2 className="w-5 h-5 animate-spin mr-2" />{isDraft ? 'Submitting…' : 'Resubmitting…'}</>
+            : isDraft ? 'Submit Site Record' : 'Resubmit Site Record'}
         </button>
 
         <p className="text-center text-xs text-gray-400 pb-4">
-          Your updated submission will be reviewed by an administrator
+          Your submission will be reviewed by an administrator
         </p>
       </form>
     </div>

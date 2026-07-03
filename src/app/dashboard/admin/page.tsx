@@ -39,6 +39,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   let subQuery = supabase
     .from('submissions')
     .select('id, name, status, created_at, profiles:user_id (email, name)')
+    .neq('status', 'draft')
     .order('created_at', { ascending: false })
 
   if (params.status && params.status !== 'all') {
@@ -51,6 +52,7 @@ export default async function AdminPage({ searchParams }: PageProps) {
   let srQuery = supabase
     .from('site_records')
     .select('id, customer, status, created_at, profiles:user_id (email, name)')
+    .neq('status', 'draft')
     .order('created_at', { ascending: false })
 
   if (params.status && params.status !== 'all') {

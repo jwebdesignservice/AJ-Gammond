@@ -184,8 +184,13 @@ export default async function DashboardPage({
           </p>
           {combined.map((entry) => {
             const isChecklist = entry.type === 'checklist'
+            const isDraft = entry.data.status === 'draft'
+            // Drafts open straight into the editor so the user can add more
+            // daily entries and submit when ready.
             const href = isChecklist
               ? `/dashboard/submission/${entry.data.id}`
+              : isDraft
+              ? `/dashboard/site-record/${entry.data.id}/edit`
               : `/dashboard/site-record/${entry.data.id}`
 
             return (

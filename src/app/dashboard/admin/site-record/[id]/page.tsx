@@ -119,6 +119,12 @@ export default async function AdminSiteRecordPage({ params }: { params: Promise<
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Machine Code</p>
             <p className="text-gray-900 font-medium mt-0.5">{siteRecord.machine_code || '—'}</p>
           </div>
+          {siteRecord.dust_collector && (
+            <div className="px-4 py-3 border-t border-gray-200">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dust Collector</p>
+              <p className="text-gray-900 font-medium mt-0.5">{siteRecord.dust_collector}</p>
+            </div>
+          )}
         </div>
 
         {/* Section 2: Work Records Table */}

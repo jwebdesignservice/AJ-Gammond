@@ -157,6 +157,12 @@ export default async function SubmissionPage({ params }: { params: Promise<{ id:
                 <p className="text-gray-900 font-medium">{formData.machineCode}</p>
               </div>
             )}
+            {formData.dustCollector && (
+              <div>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Dust Collector</p>
+                <p className="text-gray-900 font-medium">{formData.dustCollector}</p>
+              </div>
+            )}
           </div>
         </div>
       )}

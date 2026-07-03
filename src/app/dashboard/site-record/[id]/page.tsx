@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, AlertCircle, MessageSquare } from 'lucide-react'
 import StatusBadge from '@/components/StatusBadge'
@@ -21,6 +21,9 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
   if (!record) notFound()
 
   const siteRecord = record as SiteRecord
+
+  // Drafts are still being built — send the owner into the editor to continue.
+  if (siteRecord.status === 'draft') redirect(`/dashboard/site-record/${id}/edit`)
 
   const { data: notes } = await supabase
     .from('site_record_notes')
@@ -98,6 +101,12 @@ export default async function SiteRecordDetailPage({ params }: { params: Promise
             <div className="col-span-2">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Machine Code</p>
               <p className="text-gray-900 font-medium">{siteRecord.machine_code}</p>
+            </div>
+          )}
+          {siteRecord.dust_collector && (
+            <div className="col-span-2">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Dust Collector</p>
+              <p className="text-gray-900 font-medium">{siteRecord.dust_collector}</p>
             </div>
           )}
         </div>

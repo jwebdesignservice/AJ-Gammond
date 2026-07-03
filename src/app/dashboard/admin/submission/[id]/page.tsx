@@ -140,6 +140,12 @@ export default async function AdminSubmissionPage({ params }: { params: Promise<
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Machine Code</p>
               <p className="text-gray-900 font-medium mt-0.5">{formData.machineCode || '—'}</p>
             </div>
+            {formData.dustCollector && (
+              <div className="px-4 py-3 border-t border-gray-200 sm:col-span-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dust Collector</p>
+                <p className="text-gray-900 font-medium mt-0.5">{formData.dustCollector}</p>
+              </div>
+            )}
           </div>
         </div>
 

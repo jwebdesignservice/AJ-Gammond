@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.submissions (
   id                 UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id            UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
   created_at         TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-  status             TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
+  status             TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review', 'draft')),
   form_data          JSONB NOT NULL,
   comment            TEXT,
   name               TEXT NOT NULL,
@@ -44,11 +44,12 @@ CREATE TABLE IF NOT EXISTS public.site_records (
   id                    UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id               UUID REFERENCES public.profiles ON DELETE CASCADE NOT NULL,
   created_at            TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review')),
+  status                TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review', 'draft')),
   customer              TEXT NOT NULL,
   machine_type          TEXT NOT NULL,
   site_address          TEXT NOT NULL,
   machine_code          TEXT NOT NULL,
+  dust_collector        TEXT,
   rows                  JSONB NOT NULL DEFAULT '[]',
   materials             TEXT[] DEFAULT '{}',
   works_agreed_by       TEXT NOT NULL,
@@ -68,6 +69,17 @@ ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS onsite_signed_at TIMEST
 -- for the AJG rep.
 ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS signed_in_presence_of_signature TEXT;
 ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS ajg_rep_name TEXT;
+ALTER TABLE public.site_records ADD COLUMN IF NOT EXISTS dust_collector TEXT;
+
+-- Allow the 'draft' status on existing installs (save-as-draft / submit-later).
+-- The inline CHECK above only applies to brand-new tables, so refresh the
+-- constraint on tables that already exist.
+ALTER TABLE public.submissions  DROP CONSTRAINT IF EXISTS submissions_status_check;
+ALTER TABLE public.submissions  ADD  CONSTRAINT submissions_status_check
+  CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review', 'draft'));
+ALTER TABLE public.site_records DROP CONSTRAINT IF EXISTS site_records_status_check;
+ALTER TABLE public.site_records ADD  CONSTRAINT site_records_status_check
+  CHECK (status IN ('pending', 'approved', 'rejected', 'needs_review', 'draft'));
 
 CREATE TABLE IF NOT EXISTS public.site_record_notes (
   id              UUID DEFAULT uuid_generate_v4() PRIMARY KEY,

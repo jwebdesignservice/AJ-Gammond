@@ -11,7 +11,7 @@ export interface CheckItem {
 }
 
 export type MachineType = 'Trencher' | 'Rocksaw' | 'Rock Hawg'
-export type MachineCode = '030' | '066' | '1405' | '1408' | '1409' | '1421' | '1427' | '1428' | '1431' | '2401'
+export type MachineCode = '030' | '066' | '1405' | '1408' | '1409' | '1415' | '1421' | '1428' | '1431' | '2401'
 
 // Dust collector machine codes — used on the dust collectors checklist page only.
 export type DustCollectorCode = 'JMS 10' | 'JMS 20' | 'JMS 30'
@@ -22,6 +22,8 @@ export interface FormData {
   siteAddress: string
   machineType: MachineType | ''
   machineCode: MachineCode | ''
+  /** Optional dust collector unit (JMS 10/20/30) recorded on the checklist. */
+  dustCollector?: string
   siteInduction: CheckItem[]
   machineChecks: CheckItem[]
   comment: string
@@ -49,6 +51,8 @@ export interface SiteRecord {
   machine_type: string
   site_address: string
   machine_code: string
+  /** Optional dust collector unit (JMS 10/20/30) recorded on the site record. */
+  dust_collector?: string | null
   rows: SiteRecordRow[]
   materials?: string[]
   works_agreed_by: string
@@ -66,7 +70,7 @@ export interface SiteRecord {
   onsite_signed_at?: string | null
 }
 
-export type SubmissionStatus = 'pending' | 'approved' | 'rejected' | 'needs_review'
+export type SubmissionStatus = 'pending' | 'approved' | 'rejected' | 'needs_review' | 'draft'
 
 export interface Submission {
   id: string

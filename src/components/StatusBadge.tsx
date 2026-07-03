@@ -1,11 +1,16 @@
 import { SubmissionStatus } from '@/lib/types'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, PencilLine } from 'lucide-react'
 
 interface StatusBadgeProps {
   status: SubmissionStatus
 }
 
-const statusConfig: Record<SubmissionStatus, { label: string; className: string; icon?: boolean }> = {
+const statusConfig: Record<SubmissionStatus, { label: string; className: string; icon?: boolean; draftIcon?: boolean }> = {
+  draft: {
+    label: 'Draft',
+    className: 'bg-gray-100 text-gray-600 border border-gray-300',
+    draftIcon: true,
+  },
   pending: {
     label: 'Pending Review',
     className: 'bg-amber-50 text-amber-700 border border-amber-200',
@@ -32,6 +37,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[3px] ${config.className}`}>
       {config.icon && <AlertCircle className="w-3 h-3" />}
+      {config.draftIcon && <PencilLine className="w-3 h-3" />}
       {config.label}
     </span>
   )
