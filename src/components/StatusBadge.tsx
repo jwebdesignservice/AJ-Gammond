@@ -20,7 +20,7 @@ const statusConfig: Record<SubmissionStatus, { label: string; className: string;
     className: 'bg-green-50 text-green-700 border border-green-200',
   },
   rejected: {
-    label: 'Needs Reviewing',
+    label: 'Rejected',
     className: 'bg-red-50 text-red-700 border border-red-200',
     icon: true,
   },
