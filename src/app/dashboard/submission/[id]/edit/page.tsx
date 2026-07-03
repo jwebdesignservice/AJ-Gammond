@@ -22,7 +22,6 @@ export default function EditSubmissionPage({ params }: { params: Promise<{ id: s
   const [siteAddress, setSiteAddress] = useState('')
   const [machineType, setMachineType] = useState<MachineType | ''>('')
   const [machineCode, setMachineCode] = useState<MachineCode | ''>('')
-  const [dustCollector, setDustCollector] = useState('')
   const [comment, setComment] = useState('')
   const [name, setName] = useState('')
   const [signature, setSignature] = useState('')
@@ -62,7 +61,6 @@ export default function EditSubmissionPage({ params }: { params: Promise<{ id: s
       setSiteAddress(fd.siteAddress ?? '')
       setMachineType((fd.machineType as MachineType) || '')
       setMachineCode((fd.machineCode as MachineCode) || '')
-      setDustCollector(fd.dustCollector ?? '')
       setComment(fd.comment ?? sub.comment ?? '')
       setName(fd.name ?? sub.name ?? '')
       setSignature(fd.signature ?? sub.signature ?? '')
@@ -179,7 +177,6 @@ export default function EditSubmissionPage({ params }: { params: Promise<{ id: s
         siteAddress,
         machineType: machineType as MachineType,
         machineCode: machineCode as MachineCode,
-        dustCollector,
         siteInduction: siteItems,
         machineChecks: machineItems,
         comment,
@@ -354,23 +351,6 @@ export default function EditSubmissionPage({ params }: { params: Promise<{ id: s
                 ))}
               </select>
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="dustCollector" className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Dust Collector
-            </label>
-            <select
-              id="dustCollector"
-              value={dustCollector}
-              onChange={(e) => setDustCollector(e.target.value)}
-              className="input"
-            >
-              <option value="">Select…</option>
-              {(['JMS 10', 'JMS 20', 'JMS 30'] as const).map((dc) => (
-                <option key={dc} value={dc}>{dc}</option>
-              ))}
-            </select>
           </div>
         </div>
 

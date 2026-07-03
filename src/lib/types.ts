@@ -22,8 +22,6 @@ export interface FormData {
   siteAddress: string
   machineType: MachineType | ''
   machineCode: MachineCode | ''
-  /** Optional dust collector unit (JMS 10/20/30) recorded on the checklist. */
-  dustCollector?: string
   siteInduction: CheckItem[]
   machineChecks: CheckItem[]
   comment: string
